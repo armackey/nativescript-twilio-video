@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-anydpi-v21/design_ic_visibility.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/design/25.3.1/res/drawable-anydpi-v21/design_ic_visibility.xml"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-anydpi-v21/design_ic_visibility_off.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/design/25.3.1/res/drawable-anydpi-v21/design_ic_visibility_off.xml"
+    }
+]

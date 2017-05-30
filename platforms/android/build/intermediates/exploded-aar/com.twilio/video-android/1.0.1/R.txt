@@ -1,0 +1,11 @@
+int attr mirror 0x7f010000
+int attr overlaySurface 0x7f010002
+int attr scaleType 0x7f010001
+int id balanced 0x7f030000
+int id fill 0x7f030001
+int id fit 0x7f030002
+int string capturer_preview_content_description 0x7f020000
+int[] styleable VideoView { 0x7f010000, 0x7f010001, 0x7f010002 }
+int styleable VideoView_mirror 0
+int styleable VideoView_overlaySurface 2
+int styleable VideoView_scaleType 1

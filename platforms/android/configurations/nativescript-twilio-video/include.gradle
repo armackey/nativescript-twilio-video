@@ -1,0 +1,12 @@
+android {
+    productFlavors {
+        "F0" {
+            dimension "nativescripttwiliovideo"
+        }
+
+    }
+}
+
+dependencies {
+    compile 'com.twilio:video-android:1.0.1'
+}

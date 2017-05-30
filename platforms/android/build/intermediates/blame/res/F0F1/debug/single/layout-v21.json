@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/layout-v21/notification_action.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.3.1/res/layout-v21/notification_template_custom_big.xml"
+    }
+]

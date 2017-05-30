@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-mdpi/icon.png",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/src/main/res/drawable-mdpi/icon.png"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-mdpi/background.png",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/src/main/res/drawable-mdpi/background.png"
+    },
+    {
+        "merged": "/Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/res/merged/F0F1/debug/drawable-mdpi/logo.png",
+        "source": "/Users/allenmackey/Desktop/video-chat/platforms/android/src/main/res/drawable-mdpi/logo.png"
+    }
+]
