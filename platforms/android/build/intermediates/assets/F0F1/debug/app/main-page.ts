@@ -27,5 +27,5 @@ export function navigatingTo(args: EventData) {
     You can learn more about data binding in NativeScript at
     https://docs.nativescript.org/core-concepts/data-binding.
     */
-    page.bindingContext = new HelloWorldModel();
+    page.bindingContext = new HelloWorldModel(page);
 }

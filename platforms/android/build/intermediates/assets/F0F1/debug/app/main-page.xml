@@ -26,7 +26,7 @@ xmlns:TV="nativescript-twilio-video">
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        <TV:VideoActivity></TV:VideoActivity>
+        <TV:VideoActivity id="local-video"></TV:VideoActivity>
         <Label text="Tap the button" class="h1 text-center"/>
         <Button text="TAP" tap="{{ onTap }}" class="btn btn-primary btn-active"/>
         <Label text="{{ message }}" class="h2 text-center" textWrap="true"/>

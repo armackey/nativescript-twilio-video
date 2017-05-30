@@ -1,14 +1,28 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
 var view_1 = require("ui/core/view");
+;
 var AudioManager = android.media.AudioManager;
 var LocalParticipant = com.twilio.video.LocalParticipant;
 var RoomState = com.twilio.video.RoomState;
 var Video = com.twilio.video.Video;
 var VideoRenderer = com.twilio.video.VideoRenderer;
 var TwilioException = com.twilio.video.TwilioException;
+// const quickstart.R = com.twilio.video.quickstart.R;
+// const quickstart.dialog.Dialog = com.twilio.video.quickstart.dialog.Dialog;
 var AudioTrack = com.twilio.video.AudioTrack;
 var CameraCapturer = com.twilio.video.CameraCapturer;
+// const CameraCapturer.CameraSource = com.twilio.video.CameraCapturer.CameraSource;
 var ConnectOptions = com.twilio.video.ConnectOptions;
 var LocalAudioTrack = com.twilio.video.LocalAudioTrack;
 var LocalVideoTrack = com.twilio.video.LocalVideoTrack;
@@ -29,9 +43,20 @@ var VideoActivity = (function (_super) {
         configurable: true
     });
     VideoActivity.prototype.createNativeView = function () {
-        return new VideoView(this._context, null);
+        return new VideoView(this._context);
+    };
+    VideoActivity.prototype.createAudioAndVideoTracks = function (localVideo) {
+        return this;
+        // this.primaryVideoView = this.nativeView;
+        // // Share your microphone
+        // this.localAudioTrack = LocalAudioTrack.create(utils.ad.getApplicationContext(), true);
+        // // Share your camera
+        // this.cameraCapturer = new CameraCapturer(utils.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA);
+        // this.localVideoTrack = LocalVideoTrack.create(utils.ad.getApplicationContext(), true, this.cameraCapturer);
+        // this.primaryVideoView.setMirror(true);
+        // this.localVideoTrack.addRenderer(this.primaryVideoView);
+        // this.localVideoView = this.primaryVideoView;
     };
     return VideoActivity;
 }(view_1.View));
 exports.VideoActivity = VideoActivity;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidHdpbGlvLXZpZGVvLmFuZHJvaWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ0d2lsaW8tdmlkZW8uYW5kcm9pZC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLHFDQUFvQztBQUlwQyxJQUFNLFlBQVksR0FBRyxPQUFPLENBQUMsS0FBSyxDQUFDLFlBQVksQ0FBQztBQUNoRCxJQUFNLGdCQUFnQixHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLGdCQUFnQixDQUFDO0FBQzNELElBQU0sU0FBUyxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLFNBQVMsQ0FBQztBQUM3QyxJQUFNLEtBQUssR0FBRyxHQUFHLENBQUMsTUFBTSxDQUFDLEtBQUssQ0FBQyxLQUFLLENBQUM7QUFDckMsSUFBTSxhQUFhLEdBQUcsR0FBRyxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsYUFBYSxDQUFDO0FBQ3JELElBQU0sZUFBZSxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLGVBQWUsQ0FBQztBQUd6RCxJQUFNLFVBQVUsR0FBRyxHQUFHLENBQUMsTUFBTSxDQUFDLEtBQUssQ0FBQyxVQUFVLENBQUM7QUFDL0MsSUFBTSxjQUFjLEdBQUcsR0FBRyxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsY0FBYyxDQUFDO0FBRXZELElBQU0sY0FBYyxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLGNBQWMsQ0FBQztBQUN2RCxJQUFNLGVBQWUsR0FBRyxHQUFHLENBQUMsTUFBTSxDQUFDLEtBQUssQ0FBQyxlQUFlLENBQUM7QUFDekQsSUFBTSxlQUFlLEdBQUcsR0FBRyxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsZUFBZSxDQUFDO0FBQ3pELElBQU0sV0FBVyxHQUFHLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLFdBQVcsQ0FBQztBQUNqRCxJQUFNLElBQUksR0FBRyxHQUFHLENBQUMsTUFBTSxDQUFDLEtBQUssQ0FBQyxJQUFJLENBQUM7QUFDbkMsSUFBTSxVQUFVLEdBQUcsR0FBRyxDQUFDLE1BQU0sQ0FBQyxLQUFLLENBQUMsVUFBVSxDQUFDO0FBQy9DLElBQU0sU0FBUyxHQUFRLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLFNBQVMsQ0FBQztBQUVsRDtJQUFtQyxpQ0FBSTtJQUVuQztlQUNJLGlCQUFPO0lBQ1gsQ0FBQztJQUVELHNCQUFXLGtDQUFPO2FBQWxCO1lBRUksTUFBTSxDQUFDLElBQUksQ0FBQyxVQUFVLENBQUM7UUFFM0IsQ0FBQzs7O09BQUE7SUFFTSx3Q0FBZ0IsR0FBdkI7UUFFSSxNQUFNLENBQUMsSUFBSSxTQUFTLENBQUMsSUFBSSxDQUFDLFFBQVEsRUFBRSxJQUFJLENBQUMsQ0FBQztJQUU5QyxDQUFDO0lBSUwsb0JBQUM7QUFBRCxDQUFDLEFBcEJELENBQW1DLFdBQUksR0FvQnRDO0FBcEJZLHNDQUFhIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgVmlldyB9IGZyb20gJ3VpL2NvcmUvdmlldyc7XG5cbmRlY2xhcmUgdmFyIGNvbTtcblxuY29uc3QgQXVkaW9NYW5hZ2VyID0gYW5kcm9pZC5tZWRpYS5BdWRpb01hbmFnZXI7XG5jb25zdCBMb2NhbFBhcnRpY2lwYW50ID0gY29tLnR3aWxpby52aWRlby5Mb2NhbFBhcnRpY2lwYW50O1xuY29uc3QgUm9vbVN0YXRlID0gY29tLnR3aWxpby52aWRlby5Sb29tU3RhdGU7XG5jb25zdCBWaWRlbyA9IGNvbS50d2lsaW8udmlkZW8uVmlkZW87XG5jb25zdCBWaWRlb1JlbmRlcmVyID0gY29tLnR3aWxpby52aWRlby5WaWRlb1JlbmRlcmVyO1xuY29uc3QgVHdpbGlvRXhjZXB0aW9uID0gY29tLnR3aWxpby52aWRlby5Ud2lsaW9FeGNlcHRpb247XG4vLyBjb25zdCBxdWlja3N0YXJ0LlIgPSBjb20udHdpbGlvLnZpZGVvLnF1aWNrc3RhcnQuUjtcbi8vIGNvbnN0IHF1aWNrc3RhcnQuZGlhbG9nLkRpYWxvZyA9IGNvbS50d2lsaW8udmlkZW8ucXVpY2tzdGFydC5kaWFsb2cuRGlhbG9nO1xuY29uc3QgQXVkaW9UcmFjayA9IGNvbS50d2lsaW8udmlkZW8uQXVkaW9UcmFjaztcbmNvbnN0IENhbWVyYUNhcHR1cmVyID0gY29tLnR3aWxpby52aWRlby5DYW1lcmFDYXB0dXJlcjtcbi8vIGNvbnN0IENhbWVyYUNhcHR1cmVyLkNhbWVyYVNvdXJjZSA9IGNvbS50d2lsaW8udmlkZW8uQ2FtZXJhQ2FwdHVyZXIuQ2FtZXJhU291cmNlO1xuY29uc3QgQ29ubmVjdE9wdGlvbnMgPSBjb20udHdpbGlvLnZpZGVvLkNvbm5lY3RPcHRpb25zO1xuY29uc3QgTG9jYWxBdWRpb1RyYWNrID0gY29tLnR3aWxpby52aWRlby5Mb2NhbEF1ZGlvVHJhY2s7XG5jb25zdCBMb2NhbFZpZGVvVHJhY2sgPSBjb20udHdpbGlvLnZpZGVvLkxvY2FsVmlkZW9UcmFjaztcbmNvbnN0IFBhcnRpY2lwYW50ID0gY29tLnR3aWxpby52aWRlby5QYXJ0aWNpcGFudDtcbmNvbnN0IFJvb20gPSBjb20udHdpbGlvLnZpZGVvLlJvb207XG5jb25zdCBWaWRlb1RyYWNrID0gY29tLnR3aWxpby52aWRlby5WaWRlb1RyYWNrO1xuY29uc3QgVmlkZW9WaWV3OiBhbnkgPSBjb20udHdpbGlvLnZpZGVvLlZpZGVvVmlldztcblxuZXhwb3J0IGNsYXNzIFZpZGVvQWN0aXZpdHkgZXh0ZW5kcyBWaWV3IHtcblxuICAgIGNvbnN0cnVjdG9yKCkge1xuICAgICAgICBzdXBlcigpO1xuICAgIH1cblxuICAgIHB1YmxpYyBnZXQgYW5kcm9pZCgpIHtcblxuICAgICAgICByZXR1cm4gdGhpcy5uYXRpdmVWaWV3O1xuXG4gICAgfVxuXG4gICAgcHVibGljIGNyZWF0ZU5hdGl2ZVZpZXcoKSB7XG5cbiAgICAgICAgcmV0dXJuIG5ldyBWaWRlb1ZpZXcodGhpcy5fY29udGV4dCwgbnVsbCk7XG5cbiAgICB9ICAgXG5cbiAgICBcbiAgICBcbn0iXX0=

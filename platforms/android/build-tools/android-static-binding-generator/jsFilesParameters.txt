@@ -2,6 +2,7 @@
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/bundle-config.js
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/main-page.js
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/main-view-model.js
+/Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/tns_modules/nativescript-permissions/permissions.js
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/tns_modules/nativescript-twilio-video/twilio-video.js
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/tns_modules/tns-core-modules/bundle-entry-points.js
 /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/assets/app/tns_modules/tns-core-modules/application/application-common.js

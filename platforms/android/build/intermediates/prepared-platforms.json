@@ -1,4 +1,5 @@
 {
+    "nativescript-permissions": true,
     "nativescript-theme-core": true,
     "nativescript-twilio-video": true,
     "tns-core-modules": true,

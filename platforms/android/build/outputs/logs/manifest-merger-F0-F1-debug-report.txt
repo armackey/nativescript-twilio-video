@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:2:1-43:12
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:2:1-45:12
 	package
 		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:3:2-38
 		INJECTED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml
@@ -66,8 +66,16 @@ ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/Andr
 MERGED from [com.twilio:video-android:1.0.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.twilio/video-android/1.0.1/AndroidManifest.xml:11:5-67
 	android:name
 		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:19:19-61
+uses-permission#android.permission.CAMERA
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:20:2-62
+	android:name
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:20:19-59
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:21:3-69
+	android:name
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:21:20-66
 application
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:21:2-42:16
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:23:2-44:16
 MERGED from [com.twilio:video-android:1.0.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.twilio/video-android/1.0.1/AndroidManifest.xml:16:5-20
 MERGED from [:widgets-release:] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/widgets-release/AndroidManifest.xml:11:5-12:19
 MERGED from [com.android.support:design:25.3.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/design/25.3.1/AndroidManifest.xml:29:5-20
@@ -82,45 +90,45 @@ MERGED from [com.android.support:support-core-ui:25.3.1] /Users/allenmackey/Desk
 MERGED from [com.android.support:support-core-utils:25.3.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.3.1/AndroidManifest.xml:29:5-20
 MERGED from [com.android.support:support-compat:25.3.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.android.support/support-compat/25.3.1/AndroidManifest.xml:29:5-20
 	android:label
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:25:3-35
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:27:3-35
 	android:allowBackup
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:23:3-29
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:25:3-29
 	android:icon
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:24:3-32
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:26:3-32
 	android:theme
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:26:3-34
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:28:3-34
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:22:3-49
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:24:3-49
 activity#com.tns.NativeScriptActivity
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:28:3-40:14
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:30:3-42:14
 	android:label
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:30:4-49
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:32:4-49
 	android:configChanges
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:31:4-65
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:33:4-65
 	android:theme
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:32:4-44
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:34:4-44
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:29:4-47
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:31:4-47
 meta-data#SET_THEME_ON_LAUNCH
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:34:4-87
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:36:4-87
 	android:resource
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:34:50-84
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:36:50-84
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:34:15-49
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:36:15-49
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:36:4-39:20
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:38:4-41:20
 action#android.intent.action.MAIN
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:37:5-57
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:39:5-57
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:37:13-54
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:39:13-54
 category#android.intent.category.LAUNCHER
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:38:5-65
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:40:5-65
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:38:15-62
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:40:15-62
 activity#com.tns.ErrorReportActivity
-ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:41:3-57
+ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:43:3-57
 	android:name
-		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:41:13-55
+		ADDED from /Users/allenmackey/Desktop/video-chat/platforms/android/src/main/AndroidManifest.xml:43:13-55
 uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
 ADDED from [com.twilio:video-android:1.0.1] /Users/allenmackey/Desktop/video-chat/platforms/android/build/intermediates/exploded-aar/com.twilio/video-android/1.0.1/AndroidManifest.xml:12:5-80
 	android:name

@@ -1,6 +1,7 @@
 import { View } from 'ui/core/view';
+import * as utils from "tns-core-modules/utils/utils";
 
-declare var com;
+declare var com, android: any;;
 
 const AudioManager = android.media.AudioManager;
 const LocalParticipant = com.twilio.video.LocalParticipant;
@@ -23,6 +24,22 @@ const VideoView: any = com.twilio.video.VideoView;
 
 export class VideoActivity extends View {
 
+    public previousAudioMode: any;
+    public localVideoView: any;
+    public primaryVideoView: any;
+
+    public localVideoTrack: any;
+    public localAudioTrack: any;
+    public cameraCapturer: any;
+    public accessToken: string;
+    public TWILIO_ACCESS_TOKEN: string;
+    public room: string;
+    public participantIdentity: string;
+    public localParticipant: any;
+    public audioManager: any; 
+    
+    
+
     constructor() {
         super();
     }
@@ -35,10 +52,28 @@ export class VideoActivity extends View {
 
     public createNativeView() {
 
-        return new VideoView(this._context, null);
+        return new VideoView(this._context);
 
     }   
 
+    public createAudioAndVideoTracks(localVideo: any): any {
+        
+        this.primaryVideoView = this.nativeView; // undefined..?
+
+        // Share your microphone
+        this.localAudioTrack = LocalAudioTrack.create(utils.ad.getApplicationContext(), true);
+
+        // Share your camera
+        this.cameraCapturer = new CameraCapturer(utils.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA);
+        this.localVideoTrack = LocalVideoTrack.create(utils.ad.getApplicationContext(), true, this.cameraCapturer);
     
+
+        this.primaryVideoView.setMirror(true);
+        this.localVideoTrack.addRenderer(this.primaryVideoView);
+        this.localVideoView = this.primaryVideoView;
+
+    }    
+
+
     
 }

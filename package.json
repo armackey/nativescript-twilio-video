@@ -10,13 +10,15 @@
     }
   },
   "dependencies": {
+    "nativescript-permissions": "^1.2.3",
     "nativescript-theme-core": "~1.0.2",
     "nativescript-twilio-video": "file:nativescript-twilio-video",
     "tns-core-modules": "~3.0.0"
   },
   "scripts": {
     "build.plugin": "tsc nativescript-twilio-video/twilio-video.android.ts --types tns-platform-declarations/android --lib es2016 -d true",
-    "clean": "rm -rf platforms && tns platform add android && tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video"
+    "clean": "rm -rf platforms && tns platform add android && tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video",
+    "remove.plugin": "tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video"
   },
   "devDependencies": {
     "babel-traverse": "6.24.1",
