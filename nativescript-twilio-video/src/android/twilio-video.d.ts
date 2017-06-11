@@ -1,0 +1,35 @@
+import { Observable } from 'tns-core-modules/data/observable';
+export declare class VideoActivity {
+    previousAudioMode: any;
+    localVideoView: any;
+    remoteVideoView: any;
+    localVideoTrack: any;
+    localAudioTrack: any;
+    cameraCapturer: any;
+    accessToken: string;
+    TWILIO_ACCESS_TOKEN: string;
+    room: string;
+    participantIdentity: string;
+    previousMicrophoneMute: boolean;
+    localParticipant: any;
+    audioManager: any;
+    name: string;
+    name2: string;
+    videoEvent: Observable;
+    constructor();
+    createAudioAndVideoTracks(): void;
+    toggle_local_video(): void;
+    toggle_local_audio(): void;
+    destroy_local_video(): void;
+    destroy_local_audio(): void;
+    connect_to_room(roomName: string): void;
+    set_access_token(token: string, name: string): void;
+    disconnect_from_room(): void;
+    roomListener(): any;
+    participant_listener(): any;
+    private addParticipant(participant);
+    private addParticipantVideo(videoTrack);
+    removeParticipant(participant: any): void;
+    removeParticipantVideo(videoTrack: any): void;
+    configureAudio(enable: boolean): void;
+}

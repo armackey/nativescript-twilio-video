@@ -26,9 +26,21 @@ xmlns:TV="nativescript-twilio-video">
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        <TV:VideoActivity id="local-video"></TV:VideoActivity>
-        <Label text="Tap the button" class="h1 text-center"/>
-        <Button text="TAP" tap="{{ onTap }}" class="btn btn-primary btn-active"/>
-        <Label text="{{ message }}" class="h2 text-center" textWrap="true"/>
+        
+        <!--<ListView items="{{ heros }}" itemTap="{{ onItemTap }}">
+            <ListView.itemTemplate>
+            <Label text="{{ name || 'Downloading...' }}" textWrap="true" class="name" />
+            </ListView.itemTemplate>
+        </ListView>        -->
+
+        <Label text="{{ name }}"></Label>
+        <TV:RemoteVideo id="remote-video"></TV:RemoteVideo>
+        <Label text="Remote Video"></Label>
+        <TV:LocalVideo id="local-video"></TV:LocalVideo>
+        <Label text="Local Video"></Label>
+        <!--<TextView hint="room name" text="{{ roomName }}"></TextView>-->
+        <Button tap="{{ connect_to_room }}" text="connect to room"></Button>
+        <Button text="local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
+        <Button text="toggle local video" tap="{{ toggle_local_video }}" class="btn btn-primary btn-active"></Button>
     </StackLayout>
 </Page>

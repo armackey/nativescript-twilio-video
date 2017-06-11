@@ -32,7 +32,7 @@
     "/"
   ],
   "_resolved": "file:nativescript-twilio-video",
-  "_shasum": "244563ca5d54aecb57e037ec867c4446f063bc99",
+  "_shasum": "e93e036b4cb6b0b530e0999de5284b5721819468",
   "_shrinkwrap": null,
   "_spec": "nativescript-twilio-video",
   "_where": "/Users/allenmackey/Desktop/video-chat",
@@ -74,19 +74,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/armackey/nativescript-twilio-video.git"
-  },
-  "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf demo/node_modules demo/lib demo/platforms",
-    "demo.android": "npm run preparedemo && cd demo && tns run android",
-    "demo.ios": "npm run preparedemo && cd demo && tns run ios --emulator",
-    "demo.ios.device": "npm run preparedemo && cd demo && tns run ios",
-    "postclone": "npm i && node scripts/postclone.js",
-    "preparedemo": "npm run build && cd demo && tns plugin remove nativescript-twilio-video && tns plugin add .. && tns install",
-    "setup": "npm i && cd demo && npm i && cd .. && npm run build && cd demo && tns plugin add .. && cd ..",
-    "test.android": "cd demo && tns test android",
-    "test.ios": "cd demo && tns test ios --emulator",
-    "test.ios.device": "cd demo && tns test ios"
   },
   "typings": "index.d.ts",
   "version": "1.0.0"

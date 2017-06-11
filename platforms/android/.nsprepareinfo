@@ -1,7 +1,7 @@
 {
-	"time": "Tue May 30 2017 07:07:32 GMT-0700 (PDT)",
+	"time": "Sun Jun 11 2017 11:21:14 GMT-0700 (PDT)",
 	"bundle": false,
 	"release": false,
-	"changesRequireBuild": false,
-	"changesRequireBuildTime": "Tue May 30 2017 07:04:33 GMT-0700 (PDT)"
+	"changesRequireBuild": true,
+	"changesRequireBuildTime": "Sun Jun 11 2017 11:21:14 GMT-0700 (PDT)"
 }

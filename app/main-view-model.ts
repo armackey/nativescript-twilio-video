@@ -1,81 +1,92 @@
 import {Observable} from 'data/observable';
-import { VideoActivity } from 'nativescript-twilio-video';
 import { Page } from 'ui/page';
 import * as app from "tns-core-modules/application";
+var http = require("http");
 
+import { LocalVideo, RemoteVideo, VideoActivity } from 'nativescript-twilio-video';
+
+
+
+var timer = require("timer");
 var permissions = require('nativescript-permissions');
 
-export class HelloWorldModel extends Observable {
 
-    private _counter: number;
-    private _message: string;
+
+
+export class HelloWorldModel extends Observable {
+    videoActivity: VideoActivity;
+    // game mode read my lips
     private localVideo: any;
-    // private self: any;
+    private accessToken: string;
+    private roomName: string;
+    public name: string;
+    private heros: any;
+
     constructor(private page: Page) {
         super();
-
-        // let videoActivity = new VideoActivity();
-        // this.localVideo = this.page.getViewById('local-video');
-
-
-        // videoActivity.createAudioAndVideoTracks(this.localVideo); 
-        // this.renderView();
-
+        this.videoActivity = new VideoActivity();
         this.getPermissions();
-
-
+        // console.dir(this);
+        console.dir(this.videoActivity);
+        this.on('onConnected', (data) => {
+            console.log('working');
+            console.log(data);
+        })
+        // this.videoActivity.videoEvent.on('onConnected', (data) => {
+        //     console.log(data);
+        // })
     }
 
-    renderView(): void {
-        console.log('renderView called');
-        let videoActivity = new VideoActivity();
-        this.localVideo = this.page.getViewById('local-video');
-        videoActivity.createAudioAndVideoTracks(this.localVideo); 
-    }
+
 
     getPermissions(): void {
-        
-        const self = this;
 
-        permissions.requestPermissions(
-            [android.Manifest.permission.RECORD_AUDIO,
-            android.Manifest.permission.CAMERA], "I need these permissions because I'm cool")
-            .then(function () {
-
-                console.log("Woo Hoo, I have the power!");
-
-                self.renderView();
-                // console.log(self.renderView());
-                
-
+        permissions.requestPermissions([
+            android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.CAMERA
+            ], "I need these permissions because I'm cool")
+            .then((response) => {
             })
-            .catch(function (e) {
+            .catch((e) => {
                 console.dir(e);
                 console.log("Uh oh, no permissions - plan B time!");
             });
     }
 
-    get message(): string {
-        return this._message;
-    }
-    
-    set message(value: string) {
-        if (this._message !== value) {
-            this._message = value;
-            this.notifyPropertyChange('message', value)
-        }
+
+    public show_local_video() {
+
+        this.videoActivity.createAudioAndVideoTracks();
+
     }
 
-    public onTap() {
-        this._counter--;
-        this.updateMessage();
+    public toggle_local_video() {
+
+        this.videoActivity.toggle_local_video();
+
     }
 
-    private updateMessage() {
-        if (this._counter <= 0) {
-            this.message = 'Hoorraaay! You unlocked the NativeScript clicker achievement!';
-        } else {
-            this.message = `${this._counter} taps left`;
-        }
+    public set_access_token(token: string, name: string) {
+
+        this.videoActivity.set_access_token(token, name);
+
     }
+
+
+    public connect_to_room(room: string): void {
+        
+        http.getJSON('http://ac865ff2.ngrok.io/token').then((res) => {
+            
+            
+            this.set('name', res.identity);
+            this.set_access_token(res.token, res.identity);
+            this.videoActivity.connect_to_room('change3');
+            console.log('hit');
+        }, (e) => {
+            console.log(e);
+        });
+        
+    }
+
+
 }
