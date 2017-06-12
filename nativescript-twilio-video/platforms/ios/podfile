@@ -1,5 +1,2 @@
 source 'https://github.com/CocoaPods/Specs'
-
-target 'TARGET_NAME' do
-    pod 'TwilioVideo', '~> 1.0.0'
-end
+pod 'TwilioVideo', '~> 1.0.0'

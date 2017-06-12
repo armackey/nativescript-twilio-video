@@ -1,5 +1,6 @@
 import { Observable } from 'tns-core-modules/data/observable';
-export declare class VideoActivity {
+import { VideoActivityBase } from "../twilio-common";
+export declare class VideoActivity implements VideoActivityBase {
     previousAudioMode: any;
     localVideoView: any;
     remoteVideoView: any;
@@ -14,8 +15,9 @@ export declare class VideoActivity {
     localParticipant: any;
     audioManager: any;
     name: string;
-    name2: string;
     videoEvent: Observable;
+    private _roomListener;
+    private _participantListener;
     constructor();
     createAudioAndVideoTracks(): void;
     toggle_local_video(): void;
@@ -26,9 +28,9 @@ export declare class VideoActivity {
     set_access_token(token: string, name: string): void;
     disconnect_from_room(): void;
     roomListener(): any;
-    participant_listener(): any;
-    private addParticipant(participant);
-    private addParticipantVideo(videoTrack);
+    participantListener(): any;
+    addParticipant(participant: any): void;
+    addParticipantVideo(videoTrack: any): void;
     removeParticipant(participant: any): void;
     removeParticipantVideo(videoTrack: any): void;
     configureAudio(enable: boolean): void;

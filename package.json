@@ -7,6 +7,9 @@
     "id": "org.nativescript.videochat",
     "tns-android": {
       "version": "3.0.1"
+    },
+    "tns-ios": {
+      "version": "3.0.1"
     }
   },
   "dependencies": {
@@ -17,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc nativescript-twilio-video/twilio-video.android.ts --types tns-platform-declarations/android --lib es2016 -d true",
-    "clean": "rm -rf platforms && tns platform add android && tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video",
+    "clean": "rm -rf platforms && rm -rf node_modules/nativescript-twilio-video && tns platform add android && tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video",
     "remove.plugin": "tns plugin remove nativescript-twilio-video && tns plugin add nativescript-twilio-video"
   },
   "devDependencies": {

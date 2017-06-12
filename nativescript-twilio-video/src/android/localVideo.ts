@@ -5,11 +5,6 @@ var app = require("application");
 
 declare var com, android: any;
 
-const CameraCapturer = com.twilio.video.CameraCapturer;
-const LocalParticipant = com.twilio.video.LocalParticipant;
-const LocalAudioTrack = com.twilio.video.LocalAudioTrack;
-const LocalVideoTrack = com.twilio.video.LocalVideoTrack;
-
 const VideoView: any = com.twilio.video.VideoView;
 const videoView = new VideoView(utils.ad.getApplicationContext());
 

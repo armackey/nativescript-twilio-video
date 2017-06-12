@@ -6,6 +6,7 @@ import * as utils from "tns-core-modules/utils/utils";
 import { RemoteVideo } from "./remoteVideo";
 import { LocalVideo } from "./localVideo";
 import { Observable, fromObject } from 'tns-core-modules/data/observable';
+import { VideoActivityBase } from "../twilio-common";
 
 var app = require("application");
 
@@ -33,7 +34,7 @@ const VideoTrack = com.twilio.video.VideoTrack;
 // const quickstart.dialog.Dialog = com.twilio.video.quickstart.dialog.Dialog;
 // const CameraCapturer.CameraSource = com.twilio.video.CameraCapturer.CameraSource;
 
-export class VideoActivity {
+export class VideoActivity implements VideoActivityBase {
 
     public previousAudioMode: any;
     public localVideoView: any; 
@@ -49,8 +50,9 @@ export class VideoActivity {
     public localParticipant: any;
     public audioManager: any;
     public name: string;
-    public name2: string;
     public videoEvent: Observable;
+    private _roomListener: any;
+    private _participantListener: any;
 
     constructor() {
         // super();
@@ -60,6 +62,9 @@ export class VideoActivity {
         this.localVideoView = localVideo.get_local_view();
         this.remoteVideoView = remoteVideo.get_remote_view();
         this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
+        this.videoEvent = new Observable();
+        this._roomListener = this.roomListener()
+        this._participantListener = this.participantListener();
     }
 
     public createAudioAndVideoTracks() {
@@ -71,8 +76,6 @@ export class VideoActivity {
         this.cameraCapturer = new CameraCapturer(utils.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA);
         this.localVideoTrack = LocalVideoTrack.create(utils.ad.getApplicationContext(), true, this.cameraCapturer);
         this.localVideoTrack.addRenderer(this.localVideoView);
-
-
 
     }
 
@@ -141,7 +144,7 @@ export class VideoActivity {
 
         }
 
-        this.room = Video.connect(utils.ad.getApplicationContext(), connectOptionsBuilder.build(), this.roomListener());
+        this.room = Video.connect(utils.ad.getApplicationContext(), connectOptionsBuilder.build(), this._roomListener);
 
 
     }
@@ -167,24 +170,16 @@ export class VideoActivity {
 
     public roomListener() {
         let self = this;
-        let that = new WeakRef(this);
-        self.videoEvent = new Observable();
+
         return new Room.Listener({
             onConnected(room) {
-                let owner = that.get();
                 var list = room.getParticipants();
-                console.log('owner below');
-                console.dir(owner);
-                console.log('this: ', this)
                 self.localParticipant = room.getLocalParticipant();
-                
 
                 for (var i = 0, l = list.size(); i < l; i++) {
                     var participant = list.get(i);
                     self.addParticipant(participant);
                 }
-
-                // console.log(self.name, ' connected to: ' + room.getName());
                 
                 console.log("onConnected: ", self.name);
 
@@ -192,18 +187,24 @@ export class VideoActivity {
                     self.videoEvent.notify({
                         eventName: 'onConnected',
                         object: fromObject({
-                            room: room
+                            room: room,
+                            string: 'string'
                         })
                     })
                 }
-
-
-
             },
             onConnectFailure(room, error) {
-                console.log("failed to connect");
                 console.log(error);
                 self.configureAudio(false);
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onConnectFailure',
+                        object: fromObject({
+                            room: room,
+                            error: error
+                        })
+                    })
+                } 
             },
             onDisconnected(room, error) {
                 console.log("Disconnected from " + room.getName());
@@ -214,80 +215,161 @@ export class VideoActivity {
                 //     intializeUI();
                 //     moveLocalVideoToPrimaryView();
                 // } 
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onDisconnected',
+                        object: fromObject({
+                            room: room,
+                            error: error
+                        })
+                    })
+                } 
             },
             onParticipantConnected(room, participant) {
-                console.log(self.name, ' participant added');
                 self.addParticipant(participant);
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onParticipantConnected',
+                        object: fromObject({
+                            room: room,
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onParticipantDisconnected(room, participant) {
-                console.log('participant removed');
                 self.removeParticipant(participant);
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onParticipantDisconnected',
+                        object: fromObject({
+                            room: room,
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onRecordingStarted(room) {
                 /*
                  * Indicates when media shared to a Room is being recorded. Note that
                  * recording is only available in our Group Rooms developer preview.
                  */
-                console.log('onRecordingStarted');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onRecordingStarted',
+                        object: fromObject({
+                            room: room
+                        })
+                    })
+                } 
             },
             onRecordingStopped(room) {
-                console.log('onRecordingStopped');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onRecordingStopped',
+                        object: fromObject({
+                            room: room
+                        })
+                    })
+                } 
             }
 
         });
     }
 
-    public participant_listener() {
+    public participantListener() {
         let self = this;
         return new Participant.Listener({
             onAudioTrackAdded(participant, audioTrack) {
-                console.log('onAudioTrackAdded');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onAudioTrackAdded',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onAudioTrackRemoved(participant, audioTrack) {
-                console.log('onAudioTrackRemoved');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onAudioTrackRemoved',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onVideoTrackAdded(participant, videoTrack) {
-                console.log(self.name, ' onVideoTrackAdded')
                 self.addParticipantVideo(videoTrack);
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onVideoTrackAdded',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onVideoTrackRemoved(participant, VideoTrack) {
-                console.log('onVideoTrackRemoved');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onVideoTrackRemoved',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                } 
             },
             onAudioTrackEnabled(participant, AudioTrack) {
-
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onAudioTrackEnabled',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                }
             },
             onAudioTrackDisabled(participant, AudioTrack) {
-
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onAudioTrackDisabled',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                }
             },
             onVideoTrackEnabled(participant, VideoTrack) {
-                console.log('onVideoTrackEnabled');
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onVideoTrackEnabled',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                }
             },
             onVideoTrackDisabled(participant, VideoTrack) {
-
+                if (self.videoEvent) {
+                    self.videoEvent.notify({
+                        eventName: 'onVideoTrackDisabled',
+                        object: fromObject({
+                            participant: participant
+                        })
+                    })
+                }
             }
 
         });
     }
 
 
-    private addParticipant(participant) {
-        // if (typeof participant === 'string') return;
-        // this.participantIdentity = participant.getIdentity();
-        // console.log('this.participantIdentity :', this.participantIdentity );
-
-        /*
-        * Add participant renderer
-        */
-        // console.log('participant: ', participant);
-        // console.log('participant.getVideoTracks: ', participant.getVideoTracks());
-        // console.log('participant.getVideoTracks().size(): ', participant.getVideoTracks().size())
-        console.log('279: ');
-        console.log(typeof participant);
-        // console.log(Object.keys(participant));
+    public addParticipant(participant: any) {
         
 
         if (participant.getVideoTracks().size() > 0) {
-            console.log(this.name, ' found video tracks');
             this.addParticipantVideo(participant.getVideoTracks().get(0));
         }
 
@@ -295,23 +377,19 @@ export class VideoActivity {
         /*
          * Start listening for participant events
          */
-        participant.setListener(this.participant_listener());
+        participant.setListener(this._participantListener);
 
     }
 
     /*
      * Set primary view as renderer for participant video track
      */
-    private addParticipantVideo(videoTrack) {
-        console.log(this.name, ' added video track: ', videoTrack);
-        console.log(this.name, ' remote video view: ', this.remoteVideoView);
+    public addParticipantVideo(videoTrack) {
         this.localVideoView.setMirror(false);
         videoTrack.addRenderer(this.remoteVideoView);
     }
 
     public removeParticipant(participant) {
-
-        console.log("Participant " + participant.getIdentity() + " left.");
         /*
          * Remove participant renderer
          */
@@ -323,7 +401,6 @@ export class VideoActivity {
     }
 
     public removeParticipantVideo(videoTrack) { 
-        console.log('removeParticipantVideo was called');
         videoTrack.removeRenderer(this.remoteVideoView);
     }
 

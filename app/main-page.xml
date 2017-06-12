@@ -38,6 +38,7 @@ xmlns:TV="nativescript-twilio-video">
         <Label text="Remote Video"></Label>
         <TV:LocalVideo id="local-video"></TV:LocalVideo>
         <Label text="Local Video"></Label>
+        <Label text="{{ participant }}"></Label>
         <!--<TextView hint="room name" text="{{ roomName }}"></TextView>-->
         <Button tap="{{ connect_to_room }}" text="connect to room"></Button>
         <Button text="local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>

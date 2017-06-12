@@ -3,7 +3,7 @@ import { Page } from 'ui/page';
 import * as app from "tns-core-modules/application";
 var http = require("http");
 
-import { LocalVideo, RemoteVideo, VideoActivity } from 'nativescript-twilio-video';
+import { VideoActivity } from 'nativescript-twilio-video';
 
 
 
@@ -21,20 +21,79 @@ export class HelloWorldModel extends Observable {
     private roomName: string;
     public name: string;
     private heros: any;
+    public participant: any;
 
     constructor(private page: Page) {
         super();
         this.videoActivity = new VideoActivity();
         this.getPermissions();
-        // console.dir(this);
-        console.dir(this.videoActivity);
-        this.on('onConnected', (data) => {
-            console.log('working');
-            console.log(data);
-        })
+        this.set('participant', 'wow');
+        let self = this;
+
         // this.videoActivity.videoEvent.on('onConnected', (data) => {
-        //     console.log(data);
-        // })
+        //     let participants = data.object['room'].getParticipants();
+        //     let string = data.object.string;
+        //     console.log(string);
+        //     this.set('participant', string);
+        //     for (var i = 0, l = participants.size(); i < l; i++) {
+
+        //         var participant = participants.get(i);
+        //         this.participant = participant.getIdentity();
+        //         console.log(this.participant, ' is a ', typeof this.participant);
+        //         this.set('participant', String(participant.getIdentity()));
+
+        //     }
+            
+            
+        //     // console.log(data.object['room'].getName()); // room name
+        // })  
+        // this.videoActivity.videoEvent.on('onConnectFailure', (data) => {
+        //     // leave room.. request new match
+        //     console.log('onConnectFailure');
+        //     console.dir(data);
+        // }) 
+        // this.videoActivity.videoEvent.on('onDisconnected', (data) => {
+        //     // leave room.. request new match
+        //     console.log('onDisconnected');
+            
+        //     this.participant = data.object['participant'].getIdentity();
+        //     console.log('onDisconnected: ', this.participant);
+        // }) 
+        // this.videoActivity.videoEvent.on('onParticipantConnected', (data) => {
+        //     console.log('onParticipantConnected');
+        //     this.participant = data.object['participant'].getIdentity();
+        //     this.set('participant', data.object['participant'].getIdentity());
+        // }) 
+        // this.videoActivity.videoEvent.on('onParticipantDisconnected', (data) => {
+        //     // leave room.. request new match
+        //     console.log('onParticipantDisconnected');
+        //     this.participant = data.object['participant'].getIdentity();
+        // }) 
+        // this.videoActivity.videoEvent.on('onAudioTrackAdded', (data) => {
+        //     console.log('onAudioTrackAdded');
+        // }) 
+        // this.videoActivity.videoEvent.on('onAudioTrackRemoved', (data) => {
+        //     console.log('onAudioTrackRemoved');
+        // }) 
+        // this.videoActivity.videoEvent.on('onVideoTrackAdded', (data) => {
+        //     console.log('onVideoTrackAdded');
+        // }) 
+        // this.videoActivity.videoEvent.on('onVideoTrackRemoved', (data) => {
+        //     console.log('onVideoTrackRemoved');
+        // })  
+        // this.videoActivity.videoEvent.on('onAudioTrackEnabled', (data) => {
+        //     console.log('onAudioTrackEnabled');
+        // })  
+        // this.videoActivity.videoEvent.on('onAudioTrackDisabled', (data) => {
+        //     console.log('onAudioTrackDisabled');
+        // }) 
+        // this.videoActivity.videoEvent.on('onVideoTrackEnabled', (data) => {
+        //     console.log('onVideoTrackEnabled');
+        // })  
+        // this.videoActivity.videoEvent.on('onVideoTrackDisabled', (data) => {
+        //     console.log('onVideoTrackDisabled');
+        // })          
+        
     }
 
 
@@ -74,17 +133,15 @@ export class HelloWorldModel extends Observable {
 
 
     public connect_to_room(room: string): void {
-        
-        http.getJSON('http://ac865ff2.ngrok.io/token').then((res) => {
-            
-            
-            this.set('name', res.identity);
-            this.set_access_token(res.token, res.identity);
-            this.videoActivity.connect_to_room('change3');
-            console.log('hit');
-        }, (e) => {
-            console.log(e);
-        });
+        this.videoActivity.connect_to_room('a');        
+        // http.getJSON('http://ac865ff2.ngrok.io/token').then((res) => {
+        //     this.set('name', res.identity);
+        //     this.set_access_token(res.token, res.identity);
+        //     this.videoActivity.connect_to_room('aassbcdaefghaijssklm');
+        //     console.log('hit');          
+        // }, (e) => {
+        //     console.log(e);
+        // });
         
     }
 
