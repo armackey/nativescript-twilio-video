@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "nativescript-permissions@^1.2.3",
+        "scope": null,
+        "escapedName": "nativescript-permissions",
+        "name": "nativescript-permissions",
+        "rawSpec": "^1.2.3",
+        "spec": ">=1.2.3 <2.0.0",
+        "type": "range"
+      },
+      "/Users/allenmackey/Desktop/video-chat"
+    ]
+  ],
+  "_from": "nativescript-permissions@>=1.2.3 <2.0.0",
+  "_id": "nativescript-permissions@1.2.3",
+  "_inCache": true,
+  "_location": "/nativescript-permissions",
+  "_nodeVersion": "6.9.4",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/nativescript-permissions-1.2.3.tgz_1485718322177_0.42421676008962095"
+  },
+  "_npmUser": {
+    "name": "nathanaela",
+    "email": "nathan@master-technology.com"
+  },
+  "_npmVersion": "4.0.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "nativescript-permissions@^1.2.3",
+    "scope": null,
+    "escapedName": "nativescript-permissions",
+    "name": "nativescript-permissions",
+    "rawSpec": "^1.2.3",
+    "spec": ">=1.2.3 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/nativescript-permissions/-/nativescript-permissions-1.2.3.tgz",
+  "_shasum": "e3e65545f98fe488dd5578f7ff90ebae3088e700",
+  "_shrinkwrap": null,
+  "_spec": "nativescript-permissions@^1.2.3",
+  "_where": "/Users/allenmackey/Desktop/video-chat",
+  "author": {
+    "name": "Nathanael Anderson",
+    "email": "nathan@master-technology.com"
+  },
+  "bugs": {
+    "url": "https://github.com/nathanaela/nativescript-permissions/issues"
+  },
+  "dependencies": {},
+  "description": "A NativeScript plugin to deal with Android permissions",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "e3e65545f98fe488dd5578f7ff90ebae3088e700",
+    "tarball": "https://registry.npmjs.org/nativescript-permissions/-/nativescript-permissions-1.2.3.tgz"
+  },
+  "gitHead": "42146bd4f97629e55e36d0f22aaf9b1adcdfdb68",
+  "homepage": "https://github.com/nathanaela/nativescript-permissions",
+  "keywords": [
+    "NativeScript",
+    "permissions",
+    "android",
+    "android 6"
+  ],
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/nathanaela/nativescript-permissions/blob/master/LICENSE"
+  },
+  "main": "permissions",
+  "maintainers": [
+    {
+      "name": "nathanaela",
+      "email": "nathan@master-technology.com"
+    }
+  ],
+  "name": "nativescript-permissions",
+  "nativescript": {
+    "platforms": {
+      "android": "1.8.0"
+    }
+  },
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanaela/nativescript-permissions.git"
+  },
+  "scripts": {},
+  "typings": "index.d.ts",
+  "version": "1.2.3"
+}

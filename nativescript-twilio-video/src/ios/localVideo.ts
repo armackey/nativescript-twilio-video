@@ -1,10 +1,8 @@
 import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
 
+declare var TVIVideoViewRenderer, TVICameraPreviewView, UIViewContentModeScaleAspectFit;
 
-var app = require("application");
-
-declare var com, TVIVideoView;
 let rect = {
     origin: {
         x: 0,
@@ -16,16 +14,18 @@ let rect = {
     }
 };
 
-// CGRect
-const videoView: any = TVIVideoView.init(rect);
+
+const videoView = TVIVideoViewRenderer.alloc().init().view;
 
 export class LocalVideo extends View {
     
-    nativeView: UIView;
-    private localVideoView: any = videoView;
+    public localVideoView: any;
 
     constructor() {
         super();
+        
+        this.localVideoView = videoView;
+        // console.log(videoView);
     }
 
   
@@ -44,21 +44,16 @@ export class LocalVideo extends View {
 
     public initNativeView(): void {
 
-        this.nativeView.insertSubviewAtIndex( this.localVideoView , 0 );
+        // this.nativeView.contentMode = UIViewContentModeScaleAspectFit;
+
+        this.nativeView.addSubview( videoView );
 
     }
 
-    public disposeNativeView() {
+    // public disposeNativeView() {
         
-        this.nativeView = null;
+    //     this.nativeView = null;
 
-    }  
-
-    public get_local_view(): any {
-
-        return this.localVideoView;
-
-    }
-
+    // }  
 
 }
