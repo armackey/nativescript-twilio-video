@@ -1,59 +1,65 @@
 import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
+import { Observable, fromObject } from 'tns-core-modules/data/observable';
 
-declare var TVIVideoViewRenderer, TVICameraPreviewView, UIViewContentModeScaleAspectFit;
+import { VideoViewDelegate } from './delegates';
 
-let rect = {
-    origin: {
-        x: 0,
-        y: 0
-    },
-    size: {
-        width: 0,
-        height: 0
-    }
-};
-
-
-const videoView = TVIVideoViewRenderer.alloc().init().view;
+declare var TVIVideoView, CGRectMake;
+// const videoView = TVIVideoView.alloc().init();
 
 export class LocalVideo extends View {
-    
+
     public localVideoView: any;
+    public _videoViewDelegate: any; 
+    nativeView: UIView;
 
     constructor() {
         super();
-        
-        this.localVideoView = videoView;
-        // console.log(videoView);
-    }
 
-  
-    get ios(): any {
-
-        return this.nativeView;
+        this._videoViewDelegate = VideoViewDelegate.initWithOwner(new WeakRef(this));
+        this.localVideoView = TVIVideoView.alloc().initWithFrameDelegate(CGRectMake(0, 0, 0, 0), this._videoViewDelegate);    
 
     }
 
-    public createNativeView() {
+    public createNativeView(): any {
         
         return UIView.new(); 
 
     }
 
 
-    public initNativeView(): void {
+    public initNativeView(): void {  
 
-        // this.nativeView.contentMode = UIViewContentModeScaleAspectFit;
-
-        this.nativeView.addSubview( videoView );
+        this.nativeView.addSubview( this.localVideoView );
 
     }
 
-    // public disposeNativeView() {
+    public disposeNativeView(): void {
         
-    //     this.nativeView = null;
+        this.nativeView = null;
 
-    // }  
+    }
+
+    get events(): Observable {
+        
+        return this._videoViewDelegate.events;
+
+    }
+
+    get ios(): any {
+
+        return this.nativeView;
+
+    }      
+
+    // public onLoaded() {
+    //     // console.log(`onLoaded ${this.width}, ${this.height}`);
+    //     if (this.width) {
+    //         this.nativeView.frame.size.width = this.width;
+    //     }
+    //     if (this.height) {
+    //         this.nativeView.frame.size.height = this.height;
+    //     }
+    // }
 
 }

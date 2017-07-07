@@ -35,6 +35,12 @@ export class LocalVideo extends View {
 
     }
 
+    public disposeNativeView() {
+
+        this.nativeView = null;
+
+    }
+
     public get_local_view(): any {
 
         return this.localVideoView;

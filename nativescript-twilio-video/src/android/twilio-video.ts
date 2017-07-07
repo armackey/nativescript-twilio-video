@@ -1,6 +1,3 @@
-
-
-
 import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
 import { RemoteVideo } from "./remoteVideo";
@@ -27,13 +24,6 @@ const Participant = com.twilio.video.Participant;
 const Room = com.twilio.video.Room;
 const VideoTrack = com.twilio.video.VideoTrack;
 
-// const VideoView: any = com.twilio.video.VideoView;
-// const videoView = new VideoView(utils.ad.getApplicationContext());
-
-// const quickstart.R = com.twilio.video.quickstart.R;
-// const quickstart.dialog.Dialog = com.twilio.video.quickstart.dialog.Dialog;
-// const CameraCapturer.CameraSource = com.twilio.video.CameraCapturer.CameraSource;
-
 export class VideoActivity implements VideoActivityBase {
 
     public previousAudioMode: any;
@@ -44,27 +34,23 @@ export class VideoActivity implements VideoActivityBase {
     public cameraCapturer: any;
     public accessToken: string;
     public TWILIO_ACCESS_TOKEN: string;
-    public room: string;
-    public participantIdentity: string;
+    public roomObj: string;
     public previousMicrophoneMute: boolean;
     public localParticipant: any;
     public audioManager: any;
-    public name: string;
-    public videoEvent: Observable;
+    private _events: Observable;
     private _roomListener: any;
     private _participantListener: any;
 
     constructor() {
-        // super();
-        let localVideo = new LocalVideo();
-        let remoteVideo = new RemoteVideo();
-
-        this.localVideoView = localVideo.get_local_view();
-        this.remoteVideoView = remoteVideo.get_remote_view();
         this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
-        this.videoEvent = new Observable();
-        this._roomListener = this.roomListener()
-        this._participantListener = this.participantListener();
+        this._events = new Observable();
+    }
+
+    get events(): Observable {
+
+        return this._events;
+
     }
 
     public createAudioAndVideoTracks() {
@@ -91,15 +77,11 @@ export class VideoActivity implements VideoActivityBase {
 
     }  
 
-    public toggle_local_audio() {
 
-        if (this.localAudioTrack) {
 
-            let enabled = !this.localAudioTrack.isEnabled();
-
-            this.localAudioTrack(enabled);
-
-        }
+    public add_video_track(videoTrack) {
+        
+        this.addParticipantVideo(videoTrack);
 
     }
 
@@ -114,15 +96,15 @@ export class VideoActivity implements VideoActivityBase {
 
     public destroy_local_audio() {
 
-        this.localVideoTrack.removeRenderer(this.localVideoView);
+        // this.localAudioTrack.removeRenderer();
 
-        this.localVideoTrack = null
+        // this.localAudioTrack = null
 
     }      
 
     public connect_to_room(roomName: string) {
         
-        this.configureAudio(true);
+        this.configure_audio(true);
 
         let connectOptionsBuilder = new ConnectOptions.Builder(this.accessToken).roomName(roomName);
 
@@ -144,17 +126,15 @@ export class VideoActivity implements VideoActivityBase {
 
         }
 
-        this.room = Video.connect(utils.ad.getApplicationContext(), connectOptionsBuilder.build(), this._roomListener);
+        this.roomObj = Video.connect(utils.ad.getApplicationContext(), connectOptionsBuilder.build(), this.roomListener());
 
 
     }
 
 
-    public set_access_token(token: string, name: string) {
+    public set_access_token(token: string) {
 
         this.accessToken = token;
-
-        this.name = name;
 
     }
 
@@ -167,24 +147,50 @@ export class VideoActivity implements VideoActivityBase {
         this.localVideoTrack = null;        
     }
 
+    public set_listener_for_participants(room) {
+
+        var list = room.getParticipants();
+
+        this.localParticipant = room.getLocalParticipant();
+
+        for (var i = 0, l = list.size(); i < l; i++) {
+
+            var participant = list.get(i);
+
+            if (participant.getVideoTracks().size() > 0) {
+
+                this.addParticipantVideo(participant.getVideoTracks().get(0));
+
+            }
+
+
+            /*
+             * Start listening for participant events
+             */
+            participant.setListener(this.participantListener());
+
+        }
+
+        // should return name
+        // console.log('android', room.object['participant'].getIdentity());
+
+    }
+
+    public participant_joined_room(participant) {
+
+        this.addParticipant(participant);
+
+    }
+
 
     public roomListener() {
         let self = this;
 
         return new Room.Listener({
             onConnected(room) {
-                var list = room.getParticipants();
-                self.localParticipant = room.getLocalParticipant();
 
-                for (var i = 0, l = list.size(); i < l; i++) {
-                    var participant = list.get(i);
-                    self.addParticipant(participant);
-                }
-                
-                console.log("onConnected: ", self.name);
-
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onConnected',
                         object: fromObject({
                             room: room,
@@ -195,9 +201,9 @@ export class VideoActivity implements VideoActivityBase {
             },
             onConnectFailure(room, error) {
                 console.log(error);
-                self.configureAudio(false);
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                // self.configure_audio(false);
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onConnectFailure',
                         object: fromObject({
                             room: room,
@@ -208,15 +214,15 @@ export class VideoActivity implements VideoActivityBase {
             },
             onDisconnected(room, error) {
                 console.log("Disconnected from " + room.getName());
-                self.room = null;
+                // self.room = null;
                 // Only reinitialize the UI if disconnect was not called from onDestroy()
                 // if (!disconnectedFromOnDestroy) {
-                self.configureAudio(false);
+                // self.configure_audio(false);
                 //     intializeUI();
                 //     moveLocalVideoToPrimaryView();
                 // } 
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onDisconnected',
                         object: fromObject({
                             room: room,
@@ -226,9 +232,9 @@ export class VideoActivity implements VideoActivityBase {
                 } 
             },
             onParticipantConnected(room, participant) {
-                self.addParticipant(participant);
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                // self.addParticipant(participant);
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onParticipantConnected',
                         object: fromObject({
                             room: room,
@@ -238,9 +244,9 @@ export class VideoActivity implements VideoActivityBase {
                 } 
             },
             onParticipantDisconnected(room, participant) {
-                self.removeParticipant(participant);
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                // self.removeParticipant(participant);
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onParticipantDisconnected',
                         object: fromObject({
                             room: room,
@@ -254,8 +260,8 @@ export class VideoActivity implements VideoActivityBase {
                  * Indicates when media shared to a Room is being recorded. Note that
                  * recording is only available in our Group Rooms developer preview.
                  */
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onRecordingStarted',
                         object: fromObject({
                             room: room
@@ -264,8 +270,8 @@ export class VideoActivity implements VideoActivityBase {
                 } 
             },
             onRecordingStopped(room) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onRecordingStopped',
                         object: fromObject({
                             room: room
@@ -281,8 +287,8 @@ export class VideoActivity implements VideoActivityBase {
         let self = this;
         return new Participant.Listener({
             onAudioTrackAdded(participant, audioTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onAudioTrackAdded',
                         object: fromObject({
                             participant: participant
@@ -291,8 +297,8 @@ export class VideoActivity implements VideoActivityBase {
                 } 
             },
             onAudioTrackRemoved(participant, audioTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onAudioTrackRemoved',
                         object: fromObject({
                             participant: participant
@@ -301,19 +307,19 @@ export class VideoActivity implements VideoActivityBase {
                 } 
             },
             onVideoTrackAdded(participant, videoTrack) {
-                self.addParticipantVideo(videoTrack);
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onVideoTrackAdded',
                         object: fromObject({
-                            participant: participant
+                            participant: participant,
+                            videoTrack: videoTrack
                         })
                     })
                 } 
             },
-            onVideoTrackRemoved(participant, VideoTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+            onVideoTrackRemoved(participant, videoTrack) {
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onVideoTrackRemoved',
                         object: fromObject({
                             participant: participant
@@ -321,29 +327,31 @@ export class VideoActivity implements VideoActivityBase {
                     })
                 } 
             },
-            onAudioTrackEnabled(participant, AudioTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+            onAudioTrackEnabled(participant, audioTrack) {
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onAudioTrackEnabled',
                         object: fromObject({
-                            participant: participant
+                            participant: participant,
+                            audioTrack: audioTrack
                         })
                     })
                 }
             },
-            onAudioTrackDisabled(participant, AudioTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+            onAudioTrackDisabled(participant, audioTrack) {
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onAudioTrackDisabled',
                         object: fromObject({
-                            participant: participant
+                            participant: participant,
+                            audioTrack: audioTrack
                         })
                     })
                 }
             },
             onVideoTrackEnabled(participant, VideoTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onVideoTrackEnabled',
                         object: fromObject({
                             participant: participant
@@ -352,8 +360,8 @@ export class VideoActivity implements VideoActivityBase {
                 }
             },
             onVideoTrackDisabled(participant, VideoTrack) {
-                if (self.videoEvent) {
-                    self.videoEvent.notify({
+                if (self._events) {
+                    self._events.notify({
                         eventName: 'onVideoTrackDisabled',
                         object: fromObject({
                             participant: participant
@@ -370,14 +378,16 @@ export class VideoActivity implements VideoActivityBase {
         
 
         if (participant.getVideoTracks().size() > 0) {
+
             this.addParticipantVideo(participant.getVideoTracks().get(0));
+
         }
 
 
         /*
          * Start listening for participant events
          */
-        participant.setListener(this._participantListener);
+        participant.setListener(this.participantListener());
 
     }
 
@@ -404,7 +414,24 @@ export class VideoActivity implements VideoActivityBase {
         videoTrack.removeRenderer(this.remoteVideoView);
     }
 
-    public configureAudio(enable: boolean) {
+    /**
+     * currently not using toggle_local_audio
+     * not sure if its better to use this method or configure_audio
+     */
+
+    public toggle_local_audio() {
+
+        if (this.localAudioTrack) {
+
+            let enabled = !this.localAudioTrack.isEnabled();
+
+            this.localAudioTrack(enabled);
+
+        }
+
+    }    
+
+    public configure_audio(enable: boolean) {
 
         if (enable) {
 

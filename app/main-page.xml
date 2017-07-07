@@ -26,24 +26,30 @@ xmlns:TV="nativescript-twilio-video">
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
     <StackLayout class="p-20">
-        
-        <!--<ListView items="{{ heros }}" itemTap="{{ onItemTap }}">
-            <ListView.itemTemplate>
-            <Label text="{{ name || 'Downloading...' }}" textWrap="true" class="name" />
-            </ListView.itemTemplate>
-        </ListView>        -->
 
         <Label text="{{ name }}"></Label>
-        <TV:RemoteVideo id="remote-video"></TV:RemoteVideo>
+        
         <Label text="Remote Video"></Label>
-        <TV:LocalVideo id="local-video"></TV:LocalVideo>
+        
+        <TV:RemoteVideo id="remote-video"></TV:RemoteVideo>
+        
         <Label text="Local Video"></Label>
-        <Label text="{{ participant }}"></Label>
+
+        <TV:LocalVideo id="local-video"></TV:LocalVideo>
+        
+        
+        <!--<Label text="{{ participant }}"></Label>-->
         <!--<TextView hint="room name" text="{{ roomName }}"></TextView>-->
-        <Button tap="{{ connect_to_room }}" text="connect to room"></Button>
-        <Button text="local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
-        <Label text="{{ countdown }}"></Label>
-        <Button class="btn btn-primary btn-active" tap="{{ disconnect }}" text="disconnect"></Button>
-        <Button text="toggle local video" tap="{{ toggle_local_video }}" class="btn btn-primary btn-active"></Button>
+        
+        <Button text="show local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
+        
+        <Button text="toggle local video" tap="{{ toggle_local_video }}"  class="btn btn-primary btn-active"></Button>
+
+        <Button text="connect to room" tap="{{ connect_to_room }}"  class="btn btn-primary btn-active"></Button>
+
+        <Button text="disconnect" tap="{{ disconnect }}"  class="btn btn-primary btn-active" ></Button>
+
+        <Button text="add time" tap="{{ add_time }}" class="btn btn-primary btn-active"></Button>
+
     </StackLayout>
 </Page>
