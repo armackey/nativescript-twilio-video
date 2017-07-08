@@ -234,14 +234,14 @@ export class RoomDelegate extends NSObject {
     public roomDidDisconnectWithError(room, error): void {
         if (this._events) {
             this._events.notify({
-                eventName: 'didDisconnectWithError',
+                eventName: 'onDisconnected',
                 object: fromObject({
                     room: room,
                     error: error
                 })
             })
         }
-        console.log('didDisconnectWithError')
+        console.log('onDisconnected')
     };
 
     roomDidStartRecording(room): void {

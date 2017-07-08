@@ -99,9 +99,11 @@ export class HelloWorldModel extends Observable {
 
         this.videoActivity.events.on('onDisconnected', (data) => {
 
-            // let videoTrack = data.object['videoTrack'];
+            let room = data.object['room'];
 
-            // this.videoActivity.removeParticipantVideo(videoTrack);   
+            let error = data.object['error'];
+
+            console.log(error);
 
             this.videoActivity.configure_audio(false);
 
@@ -129,8 +131,10 @@ export class HelloWorldModel extends Observable {
              */
 
             let participant = data.object['participant'];
+            
 
             this.videoActivity.removeParticipant(participant);            
+            
 
             // this.participant = data.object['participant'].getIdentity();
 
@@ -231,7 +235,7 @@ export class HelloWorldModel extends Observable {
 
             this.videoActivity.set_access_token(res.token);
 
-            this.videoActivity.connect_to_room('0123a1');
+            this.videoActivity.connect_to_room('a31');
 
         }, (e) => {
 

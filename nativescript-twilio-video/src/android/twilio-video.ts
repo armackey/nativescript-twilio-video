@@ -41,6 +41,7 @@ export class VideoActivity implements VideoActivityBase {
     private _events: Observable;
     private _roomListener: any;
     private _participantListener: any;
+    public participant: any;
 
     constructor() {
         this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
@@ -425,7 +426,7 @@ export class VideoActivity implements VideoActivityBase {
 
             let enabled = !this.localAudioTrack.isEnabled();
 
-            this.localAudioTrack(enabled);
+            this.localAudioTrack.enable(enabled);
 
         }
 

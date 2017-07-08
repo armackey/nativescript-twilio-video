@@ -30,6 +30,7 @@ export class VideoActivity implements VideoActivityBase {
     private _roomListener: any;
     private _participantDelegate: any;
     private _roomDelegate: any;
+    public participant: any;
 
     constructor() { 
         
@@ -78,15 +79,6 @@ export class VideoActivity implements VideoActivityBase {
 
     }
 
-    public toggle_local_audio() {
-        
-        if (this.localAudioTrack) {
-
-            this.localAudioTrack.enabled = !this.localAudioTrack.isEnabled;
-
-        }
-
-    }
 
     public configure_audio(enable: boolean): any {
 
@@ -113,7 +105,10 @@ export class VideoActivity implements VideoActivityBase {
                 participant.videoTracks[0].removeRenderer(this.remoteVideoView);
                 this.remoteVideoView.removeFromSuperview();
             }
+
             participant = null;
+
+            this.participant = null;
         }
     }
 
@@ -153,11 +148,13 @@ export class VideoActivity implements VideoActivityBase {
 
             participant.videoTracks[0].removeRenderer(this.remoteVideoView);
 
-            this.remoteVideoView.removeFromSuperview();
+            // this.remoteVideoView.removeFromSuperview();
 
         }
 
         participant = null;
+
+        this.participant = null;
 
     }
 
@@ -172,7 +169,17 @@ export class VideoActivity implements VideoActivityBase {
 
         if (this.localVideoTrack) {
 
-            this.localVideoTrack.enabled = !this.localVideoTrack.enabled
+            this.localVideoTrack.enabled = !this.localVideoTrack.enabled;
+
+        }
+
+    }
+
+    public toggle_local_audio() {
+
+        if (this.localAudioTrack) {
+
+            this.localAudioTrack.enabled = !this.localAudioTrack.enabled;
 
         }
 
