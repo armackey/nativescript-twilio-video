@@ -27,14 +27,14 @@ const VideoTrack = com.twilio.video.VideoTrack;
 export class VideoActivity implements VideoActivityBase {
 
     public previousAudioMode: any;
-    public localVideoView: any; 
-    public remoteVideoView: any; 
+    public localVideoView: any;
+    public remoteVideoView: any;
     public localVideoTrack: any;
     public localAudioTrack: any;
     public cameraCapturer: any;
     public accessToken: string;
     public TWILIO_ACCESS_TOKEN: string;
-    public roomObj: string;
+    public roomObj: any;
     public previousMicrophoneMute: boolean;
     public localParticipant: any;
     public audioManager: any;
@@ -76,12 +76,12 @@ export class VideoActivity implements VideoActivityBase {
 
         }
 
-    }  
+    }
 
 
 
     public add_video_track(videoTrack) {
-        
+
         this.addParticipantVideo(videoTrack);
 
     }
@@ -91,7 +91,7 @@ export class VideoActivity implements VideoActivityBase {
         this.localVideoTrack.removeRenderer(this.localVideoView);
 
         this.localVideoTrack = null
-        
+
 
     }
 
@@ -101,10 +101,10 @@ export class VideoActivity implements VideoActivityBase {
 
         // this.localAudioTrack = null
 
-    }      
+    }
 
     public connect_to_room(roomName: string) {
-        
+
         this.configure_audio(true);
 
         let connectOptionsBuilder = new ConnectOptions.Builder(this.accessToken).roomName(roomName);
@@ -145,7 +145,7 @@ export class VideoActivity implements VideoActivityBase {
         this.localParticipant.removeVideoTrack(this.localVideoTrack);
         this.localParticipant = null;
         this.localVideoTrack.release();
-        this.localVideoTrack = null;        
+        this.localVideoTrack = null;
     }
 
     public set_listener_for_participants(room) {
@@ -211,7 +211,7 @@ export class VideoActivity implements VideoActivityBase {
                             error: error
                         })
                     })
-                } 
+                }
             },
             onDisconnected(room, error) {
                 console.log("Disconnected from " + room.getName());
@@ -230,7 +230,7 @@ export class VideoActivity implements VideoActivityBase {
                             error: error
                         })
                     })
-                } 
+                }
             },
             onParticipantConnected(room, participant) {
                 // self.addParticipant(participant);
@@ -242,7 +242,7 @@ export class VideoActivity implements VideoActivityBase {
                             participant: participant
                         })
                     })
-                } 
+                }
             },
             onParticipantDisconnected(room, participant) {
                 // self.removeParticipant(participant);
@@ -254,7 +254,7 @@ export class VideoActivity implements VideoActivityBase {
                             participant: participant
                         })
                     })
-                } 
+                }
             },
             onRecordingStarted(room) {
                 /*
@@ -268,7 +268,7 @@ export class VideoActivity implements VideoActivityBase {
                             room: room
                         })
                     })
-                } 
+                }
             },
             onRecordingStopped(room) {
                 if (self._events) {
@@ -278,7 +278,7 @@ export class VideoActivity implements VideoActivityBase {
                             room: room
                         })
                     })
-                } 
+                }
             }
 
         });
@@ -295,7 +295,7 @@ export class VideoActivity implements VideoActivityBase {
                             participant: participant
                         })
                     })
-                } 
+                }
             },
             onAudioTrackRemoved(participant, audioTrack) {
                 if (self._events) {
@@ -305,7 +305,7 @@ export class VideoActivity implements VideoActivityBase {
                             participant: participant
                         })
                     })
-                } 
+                }
             },
             onVideoTrackAdded(participant, videoTrack) {
                 if (self._events) {
@@ -316,7 +316,7 @@ export class VideoActivity implements VideoActivityBase {
                             videoTrack: videoTrack
                         })
                     })
-                } 
+                }
             },
             onVideoTrackRemoved(participant, videoTrack) {
                 if (self._events) {
@@ -326,7 +326,7 @@ export class VideoActivity implements VideoActivityBase {
                             participant: participant
                         })
                     })
-                } 
+                }
             },
             onAudioTrackEnabled(participant, audioTrack) {
                 if (self._events) {
@@ -376,7 +376,7 @@ export class VideoActivity implements VideoActivityBase {
 
 
     public addParticipant(participant: any) {
-        
+
 
         if (participant.getVideoTracks().size() > 0) {
 
@@ -411,7 +411,7 @@ export class VideoActivity implements VideoActivityBase {
 
     }
 
-    public removeParticipantVideo(videoTrack) { 
+    public removeParticipantVideo(videoTrack) {
         videoTrack.removeRenderer(this.remoteVideoView);
     }
 
@@ -430,7 +430,7 @@ export class VideoActivity implements VideoActivityBase {
 
         }
 
-    }    
+    }
 
     public configure_audio(enable: boolean) {
 
@@ -465,5 +465,7 @@ export class VideoActivity implements VideoActivityBase {
 
         }
     }
+    
+
 
 }

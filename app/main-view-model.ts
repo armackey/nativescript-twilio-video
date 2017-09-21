@@ -2,33 +2,17 @@ import { Observable, fromObject } from 'data/observable';
 import { Page } from 'ui/page';
 import * as app from "tns-core-modules/application";
 import { View } from "ui/core/view"
-var http = require("http");
-
 import { LocalVideo, VideoActivity, RemoteVideo} from 'nativescript-twilio-video';
 
-
-
-
-var timer = require("timer");
+var http = require("http");
 var permissions = require('nativescript-permissions');
-var participant;
-var _pdelegate;
-var rdelegate;
-/**
- * create disconnect button test
- * create toggle audio/video test
- * fix VideoActivityBase
- * 
- */
-
 
 
 
 export class HelloWorldModel extends Observable {
-    room: any;
-    videoActivity: VideoActivity;
-    // game mode read my lips
-    private localVideo: any;
+    
+    private localVideo: LocalVideo;
+    private remoteVideo: RemoteVideo;
     private accessToken: string;
     private roomName: string;
     public name: string;
@@ -37,22 +21,39 @@ export class HelloWorldModel extends Observable {
     public countdown: number = 60;
     public roomButton: any;
     localVideoView: any;
-
+    videoActivity: VideoActivity;
 
     constructor(private page: Page) {
         super();
 
-        let localVideo = <LocalVideo>this.page.getViewById('local-video');
+        this.localVideo = <LocalVideo>this.page.getViewById('local-video');
 
-        let remoteVideo = <RemoteVideo>this.page.getViewById('remote-video');
+        this.remoteVideo = <RemoteVideo>this.page.getViewById('remote-video');
 
         this.videoActivity = new VideoActivity();
         
-        this.videoActivity.localVideoView = localVideo.localVideoView;
+        this.videoActivity.localVideoView = this.localVideo.localVideoView;
         
-        this.videoActivity.remoteVideoView = remoteVideo.remoteVideoView;
+        this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
 
-        this.getPermissions();
+        this.videoActivity.createAudioAndVideoTracks()
+        
+
+
+        this.getPermissions()
+        this.getToken()                
+            .then((result) => {
+                console.log('result');
+                var result = result.content.toJSON();
+                // console.dir(result.content);
+                console.log(result['token']);
+
+                this.videoActivity.set_access_token(result['token']);
+                
+            })
+                
+
+
 
         this.videoActivity.events.on('onConnected', (data) => {
 
@@ -115,7 +116,7 @@ export class HelloWorldModel extends Observable {
 
         this.videoActivity.events.on('onConnectFailure', (data) => {
             // leave room.. request new match
-            console.log('onConnectFailure');
+            console.log(JSON.stringify(data));
 
             this.videoActivity.configure_audio(false);
 
@@ -176,22 +177,31 @@ export class HelloWorldModel extends Observable {
 
 
 
-    getPermissions(): void {
+    getPermissions(): Promise<any> {
 
-        if (app.android) {
+        return new Promise((resolve, reject) => {
 
-            permissions.requestPermissions([
-                android.Manifest.permission.RECORD_AUDIO,
-                android.Manifest.permission.CAMERA
-            ], "I need these permissions because I'm cool")
-                .then((response) => {
-                })
-                .catch((e) => {
-                    console.dir(e);
-                    console.log("Uh oh, no permissions - plan B time!");
-                });            
+            if (app.android) {
 
-        }
+                permissions.requestPermissions([
+                    "android.permission.RECORD_AUDIO",
+                    "android.permission.CAMERA"
+                ], "I need these permissions because I'm cool")
+                    .then((response) => {
+                        console.dir(response);
+                        resolve();
+                    })
+                    .catch((e) => {
+                        console.dir(e);
+                        console.log("Uh oh, no permissions - plan B time!");
+                    });
+
+            } else {
+                resolve();
+            }
+
+            
+        })
 
 
     }
@@ -229,20 +239,35 @@ export class HelloWorldModel extends Observable {
 
     }
 
-    public connect_to_room(room: string): void {       
-        
-        http.getJSON('https://88648a24.ngrok.io/token').then((res) => {
+    public connect_to_room(): void {    
+           
 
-            this.videoActivity.set_access_token(res.token);
-
-            this.videoActivity.connect_to_room('a31');
-
-        }, (e) => {
-
-            console.log(e);
-
-        });
+        this.videoActivity.connect_to_room('abc');
 
     }
+
+
+
+
+    public getToken(): any {
+        let user = {
+            name: ''
+        };
+
+        if (app.android) {
+            user.name = 'android'
+        } else {
+            user.name = 'ios';
+        }
+        return http.request({
+            url: "https://us-central1-firebase-goblur.cloudfunctions.net/get_token",
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            content: JSON.stringify(user)
+        });
+
+
+    }
+
 
 }

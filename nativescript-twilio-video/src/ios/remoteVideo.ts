@@ -9,7 +9,7 @@ declare var TVIVideoView, CGRectMake;
 
 export class RemoteVideo extends View {
 
-    public remoteVideoView: any;
+    remoteVideoView: any;
     _remoteViewDelegate: any;
     nativeView: UIView;
 
@@ -22,14 +22,16 @@ export class RemoteVideo extends View {
 
     public createNativeView() {
 
-        return UIView.new();
+        // return UIView.new();
+        return this.remoteVideoView;
 
     }    
 
 
     public initNativeView(): void {
 
-        this.nativeView.addSubview(this.remoteVideoView);
+        // this.nativeView.addSubview(this.remoteVideoView);
+        
 
     }
 
@@ -51,6 +53,11 @@ export class RemoteVideo extends View {
 
     }  
 
+    // public removeVideoView() {
+
+    //     this.nativeView.removeFromSuperview();
+        
+    // }
 
 
 }

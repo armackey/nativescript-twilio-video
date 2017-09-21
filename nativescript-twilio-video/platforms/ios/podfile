@@ -1,8 +1,8 @@
 source 'https://github.com/CocoaPods/Specs'
-source 'https://github.com/twilio/cocoapod-specs'
+# source 'https://github.com/twilio/cocoapod-specs'
 
-platform :ios, '9.0'
-pod 'TwilioVideo', '~> 1.0.2'
+platform :ios, '8.1'
+pod 'TwilioVideo', '2.0.0-preview3'
 # pod 'TwilioVideo', '1.0.2'
 # pod 'TwilioSDK', '~> 1.2'
 # pod 'TwilioClient', '~>1.2'

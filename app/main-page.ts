@@ -8,6 +8,7 @@ import { EventData } from 'data/observable';
 import { Page } from 'ui/page';
 import { HelloWorldModel } from './main-view-model';
 
+var model;
 // Event handler for Page "navigatingTo" event attached in main-page.xml
 export function navigatingTo(args: EventData) {
     /*
@@ -27,5 +28,12 @@ export function navigatingTo(args: EventData) {
     You can learn more about data binding in NativeScript at
     https://docs.nativescript.org/core-concepts/data-binding.
     */
-    page.bindingContext = new HelloWorldModel(page);
+    model = new HelloWorldModel(page);
+    page.bindingContext = model;
+}
+
+export function onViewUnloaded(args: EventData) {
+
+    // model.remove_video_views();
+
 }

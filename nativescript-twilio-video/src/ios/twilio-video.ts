@@ -16,21 +16,21 @@ declare var TVIConnectOptions,
 
 export class VideoActivity implements VideoActivityBase {
 
-    public localVideoView: any;
-    public remoteVideoView: any;
-    public localVideoTrack: any;
-    public localAudioTrack: any;
-    public cameraCapturer: any;
-    public _cameraCapturerDelegate: any;
-    public accessToken: string;
-    public roomObj: any;
-    public previousMicrophoneMute: boolean;
-    public localParticipant: any;
-    public remoteParticipant: any;
-    private _roomListener: any;
-    private _participantDelegate: any;
-    private _roomDelegate: any;
-    public participant: any;
+    localVideoView: any;
+    remoteVideoView: any;
+    localVideoTrack: any;
+    localAudioTrack: any;
+    cameraCapturer: any;
+    _cameraCapturerDelegate: any;
+    accessToken: string;
+    roomObj: any;
+    previousMicrophoneMute: boolean;
+    localParticipant: any;
+    remoteParticipant: any;
+    _roomListener: any;
+    _participantDelegate: any;
+    _roomDelegate: any;
+    participant: any;
 
     constructor() { 
         
@@ -96,6 +96,14 @@ export class VideoActivity implements VideoActivityBase {
             }         
 
         } 
+
+    }
+
+    public destroy_local_audio() {
+
+        // this.localAudioTrack.removeRenderer();
+
+        // this.localAudioTrack = null
 
     }
 

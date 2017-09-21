@@ -12,12 +12,17 @@ components that have the btn class name.
     font-size: 18;
 }
 #local-video {
-    width: 50;
-    height: 50;
+    
+    width: 150;
+    height: 150;
+    /* background-color: blueviolet; */
 }
 #remote-video {
-    width: 50;
-    height: 50;
+    width: 150;
+    height: 150;
+}
+StackLayout {
+    background-color: green;
 }
 .name {
     font-size: 18;

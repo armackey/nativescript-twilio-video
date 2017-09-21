@@ -4,7 +4,7 @@ of which NativeScript renders with a platform-specific iOS or Android native con
 You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page"
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" unloaded="onViewUnloaded" class="page"
 xmlns:TV="nativescript-twilio-video">
     <!--
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
@@ -25,22 +25,34 @@ xmlns:TV="nativescript-twilio-video">
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
-    <StackLayout class="p-20">
+    <StackLayout id="s">
 
-        <Label text="{{ name }}"></Label>
+        <!-- <Label text="{{ name }}"></Label>
         
-        <Label text="Remote Video"></Label>
+        <Label text="Remote Video"></Label> -->
+
+
+
+
         
         <TV:RemoteVideo id="remote-video"></TV:RemoteVideo>
         
-        <Label text="Local Video"></Label>
+        
 
-        <TV:LocalVideo id="local-video"></TV:LocalVideo>
+        <!-- <AbsoluteLayout width="400" height="800" backgroundColor="yellow"> -->
+            
+            <Label top="0" text="Local Video"></Label>
+
+            <TV:LocalVideo horizontalAlignment="left" id="local-video"></TV:LocalVideo>
+
+        <!-- </AbsoluteLayout> -->
+
+        <Button text="connect" tap="{{ connect_to_room }}"></Button>
         
         <!--<Label text="{{ participant }}"></Label>-->
         <!--<TextView hint="room name" text="{{ roomName }}"></TextView>-->
         
-        <Button text="show local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
+        <!-- <Button text="show local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
 
         <Button text="toggle local video" tap="{{ toggle_local_video }}"  class="btn btn-primary btn-active"></Button>
 
@@ -51,6 +63,7 @@ xmlns:TV="nativescript-twilio-video">
         <Button text="disconnect" tap="{{ disconnect }}"  class="btn btn-primary btn-active" ></Button>
 
         
+        -->
 
-    </StackLayout>
+    </StackLayout> 
 </Page>

@@ -9,9 +9,9 @@ declare var TVIVideoView, CGRectMake;
 
 export class LocalVideo extends View {
 
-    public localVideoView: any;
-    public _videoViewDelegate: any; 
-    nativeView: UIView;
+    localVideoView: any;
+    _videoViewDelegate: any; 
+    nativeView: any;
 
     constructor() {
         super();
@@ -23,14 +23,15 @@ export class LocalVideo extends View {
 
     public createNativeView(): any {
         
-        return UIView.new(); 
+        // return UIView.new(); 
+        return this.localVideoView;
 
     }
 
 
     public initNativeView(): void {  
 
-        this.nativeView.addSubview( this.localVideoView );
+        // this.nativeView.addSubview( this.localVideoView );
 
     }
 
@@ -46,11 +47,17 @@ export class LocalVideo extends View {
 
     }
 
-    get ios(): any {
+    // get ios(): any {
 
-        return this.nativeView;
+    //     return this.nativeView;
 
-    }      
+    // }     
+    
+    // public removeVideoView() {
+        
+    //     this.nativeView.removeFromSuperview();
+
+    // }
 
     // public onLoaded() {
     //     // console.log(`onLoaded ${this.width}, ${this.height}`);
