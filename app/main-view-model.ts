@@ -3,9 +3,12 @@ import { Page } from 'ui/page';
 import * as app from "tns-core-modules/application";
 import { View } from "ui/core/view"
 import { LocalVideo, VideoActivity, RemoteVideo} from 'nativescript-twilio-video';
+import * as dialogs from "ui/dialogs";
+import { StackLayout } from 'tns-core-modules/ui/layouts/stack-layout/stack-layout';
 
 var http = require("http");
 var permissions = require('nativescript-permissions');
+const timer = require("timer");
 
 
 
@@ -20,196 +23,302 @@ export class HelloWorldModel extends Observable {
     public participant: any;
     public countdown: number = 60;
     public roomButton: any;
+    public uiview: UIView;
     localVideoView: any;
+    error: string;
+    videoTrack: any;
     videoActivity: VideoActivity;
 
     constructor(private page: Page) {
         super();
 
-        this.localVideo = <LocalVideo>this.page.getViewById('local-video');
-
-        this.remoteVideo = <RemoteVideo>this.page.getViewById('remote-video');
+        var container = <StackLayout>this.page.getViewById('s');
 
         this.videoActivity = new VideoActivity();
+
+        this.localVideo = new LocalVideo();
+
+        this.remoteVideo = new RemoteVideo();
+
+        this.localVideo.className = 'box';
+        
+        this.remoteVideo.className = 'box';
+
+        container.insertChild(this.localVideo, 0);
+
+        container.insertChild(this.remoteVideo, 1);
         
         this.videoActivity.localVideoView = this.localVideo.localVideoView;
         
         this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
 
-        this.videoActivity.createAudioAndVideoTracks()
+        // timer.setInterval(() => {
+        //     console.log(this.videoActivity.remoteParticipants ? this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack : undefined);
+        // }, 3000)
+
+        this.videoActivity.event.on('error', (reason) => {
+            this.set("error", reason.object['reason']);
+            console.log(JSON.stringify(reason.object['reason']));
+        });
         
 
-
-        this.getPermissions()
-        this.getToken()                
-            .then((result) => {
-                console.log('result');
-                var result = result.content.toJSON();
-                // console.dir(result.content);
-                console.log(result['token']);
-
-                this.videoActivity.set_access_token(result['token']);
-                
-            })
-                
-
-
-
-        this.videoActivity.events.on('onConnected', (data) => {
-
-            let room = data.object['room'];
-
-            console.log(room);
-            
-            this.videoActivity.set_listener_for_participants(room);
-
-        });  
-
-        this.videoActivity.events.on('onParticipantConnected', (data) => {
-
-            console.log('onParticipantConnected');
-
-            let participant = data.object['participant'];
-
-            let room = data.object['room'];
-
-            this.videoActivity.participant_joined_room(participant);
-
-            // this.participant = data.object['participant'].getIdentity();
-
-            // this.set('participant', data.object['participant'].getIdentity());
-
-        });   
-
-        this.videoActivity.events.on('onVideoTrackAdded', (data) => {
-
-            /**
-             *  add video track here
-             */
-
-            console.log('onVideoTrackAdded');
-
-            let videoTrack = data.object['videoTrack'];
-
-            let participant = data.object['participant'];
-
-            this.videoActivity.add_video_track(videoTrack);
-
-
-        });              
-
-        this.videoActivity.events.on('onDisconnected', (data) => {
-
-            let room = data.object['room'];
-
-            let error = data.object['error'];
-
-            console.log(error);
-
-            this.videoActivity.configure_audio(false);
-
-            console.log('onDisconnected');
-
-        }); 
-
- 
-
-        this.videoActivity.events.on('onConnectFailure', (data) => {
-            // leave room.. request new match
-            console.log(JSON.stringify(data));
-
-            this.videoActivity.configure_audio(false);
-
+        this.videoActivity.event.on('didConnectToRoom', (r) => {
+            if (r.object['count'] < 1) return;
+            console.log("didConnectToRoom zz");
+            console.log(JSON.stringify(r));
         });
 
- 
-        this.videoActivity.events.on('onParticipantDisconnected', (data) => {
+        this.videoActivity.event.on('didFailToConnectWithError', (r) => {
+            // if (app.ios) this.cleanupRemoteParticipant();
             
-            console.log('onParticipantDisconnected');
+            console.log("didFailToConnectWithError");
+        });
 
-            /**
-             * leave room.. request new match
-             */
-
-            let participant = data.object['participant'];
+        this.videoActivity.event.on('participantDidConnect', (r) => {
+            if (r.object['count'] < 1) return;
+            if (app.ios && container.getChildIndex(this.remoteVideo) === -1) {
+                console.log('adding view');
+                this.add_remote_view(container);
+            }
             
+            console.log(JSON.stringify(r));
+            console.log("participantDidConnect");
+        });
 
-            this.videoActivity.removeParticipant(participant);            
+        this.videoActivity.event.on('participantDidDisconnect', (r) => {
+            if (app.ios) {
+                container.removeChild(this.remoteVideo);
+                // this.cleanupRemoteParticipant();
+            }
             
+            console.log("participantDidDisconnect");
+        });
 
-            // this.participant = data.object['participant'].getIdentity();
+        // this.videoActivity.event.on('participantUnpublishedAudioTrack', (r) => {
+        //     console.log("participantUnpublishedAudioTrack");
+        // });
 
-        }); 
+        // this.videoActivity.event.on('participantPublishedVideoTrack', (r) => {
+        //     console.log("participantPublishedVideoTrack");
+        // });
 
-        this.videoActivity.events.on('onAudioTrackAdded', (data) => {
+        // this.videoActivity.event.on('participantUnpublishedVideoTrack', (r) => {
+        //     console.log("participantUnpublishedVideoTrack");
+        // });
 
-            console.log('onAudioTrackAdded');
+        // this.videoActivity.event.on('onAudioTrackSubscribed', (r) => {
+        //     console.log("onAudioTrackSubscribed");
+        // });
 
-        }); 
+        // this.videoActivity.event.on('onAudioTrackUnsubscribed', (r) => {
+        //     console.log("onAudioTrackUnsubscribed");
+        // });
 
-        this.videoActivity.events.on('onAudioTrackRemoved', (data) => {
+        this.videoActivity.event.on('onVideoTrackSubscribed', (r) => {
+            console.log("onVideoTrackSubscribed 00");
+            if (app.ios) {
+                // this.videoTrack = this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack;
+                console.log(this.videoActivity.videoTrack);
+                // this.add_remote_view();
+                // this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
+            }
+        });
 
-            console.log('onAudioTrackRemoved');
+        this.videoActivity.event.on('onVideoTrackUnsubscribed', (r) => {
+            console.log("onVideoTrackUnsubscribed 00");
+        });
 
-        }); 
+        this.videoActivity.event.on('participantDisabledVideoTrack', (r) => {
+            console.log("participantDisabledVideoTrack");
+        });
 
-        this.videoActivity.events.on('onVideoTrackRemoved', (data) => {
-            console.log('onVideoTrackRemoved');
-        });  
+        this.videoActivity.event.on('participantEnabledVideoTrack', (r) => {
+            console.log("participantEnabledVideoTrack");
+        });
 
-        this.videoActivity.events.on('onAudioTrackEnabled', (data) => {
-            console.log('onAudioTrackEnabled');
-        });  
+        this.videoActivity.event.on('participantDisabledAudioTrack', (r) => {
+            console.log("participantDisabledAudioTrack");
+        });
 
-        this.videoActivity.events.on('onAudioTrackDisabled', (data) => {
-            console.log('onAudioTrackDisabled');
-        }); 
+        this.videoActivity.event.on('participantEnabledAudioTrack', (r) => {
+            console.log("participantEnabledAudioTrack");
+        });
 
-        this.videoActivity.events.on('onVideoTrackEnabled', (data) => {
-            console.log('onVideoTrackEnabled');
-        });  
-
-        this.videoActivity.events.on('onVideoTrackDisabled', (data) => {
-            console.log('onVideoTrackDisabled');
-        });          
+        
+        this.getPermissions()
+            .then(() => {
+                var t = timer.setTimeout(() => {
+                    this.videoActivity.startPreview();
+                    timer.clearTimeout(t);
+                }, 1200)
+            })
+            .then(() => this.getToken())
+            .then((result) => {
+                var result = result.content.toJSON();
+                this.videoActivity.set_access_token(result['token']);
+                // this.videoActivity.accessToken = result['token'];
+            })
+   
 
     }
 
+    // cleanupRemoteParticipant(): void {
+    //     this.videoTrack.removeRenderer(this.videoActivity.remoteVideoView);
+    //     this.videoActivity.remoteVideoView.removeFromSuperview();
+    //     // if (this.videoActivity.remoteParticipants && this.videoActivity.remoteParticipants.videoTracks.count > 0) {
+    //     //     var videoTrack = this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack;
+    //     //     console.log(videoTrack);
+    //     //     if (videoTrack === null) return this.cleanupRemoteParticipant();
 
+    //     //     videoTrack.removeRenderer(this.videoActivity.remoteVideoView);
+            
+
+
+    //     this.videoActivity.remoteParticipants = undefined;
+    //     // }
+    // }
+
+    add_remote_view(c): void {
+        this.remoteVideo = new RemoteVideo();
+        this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
+        this.remoteVideo.className = 'box';
+        c.insertChild(this.remoteVideo, 1);
+    }
+
+
+    check_permissions(): boolean {
+        var audio, camera;
+
+        if (app.android) {
+            audio = permissions.hasPermission("android.permission.RECORD_AUDIO")    
+            camera = permissions.hasPermission("android.permission.CAMERA") 
+        } else {
+            camera = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo);
+            audio = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio);
+            if (camera < 3) camera = false;
+            if (audio < 3) audio = false;
+        }
+
+        if (!audio || !camera) return false;
+        else return true;
+
+    }
 
     getPermissions(): Promise<any> {
 
         return new Promise((resolve, reject) => {
+            
+            var has_permissions = this.check_permissions();
+
+            if (has_permissions) {
+                resolve();
+                return;
+            }
 
             if (app.android) {
-
                 permissions.requestPermissions([
                     "android.permission.RECORD_AUDIO",
                     "android.permission.CAMERA"
                 ], "I need these permissions because I'm cool")
                     .then((response) => {
                         console.dir(response);
-                        resolve();
+                        resolve(response);
                     })
                     .catch((e) => {
                         console.dir(e);
                         console.log("Uh oh, no permissions - plan B time!");
+                        var has_permissions = this.check_permissions();
+
+                        if (!has_permissions) {
+
+                            dialogs.alert("without mic and camera permissions \n you cannot meet potential matches through video chat. \n please allow permissions in settings and try again.").then(() => {
+
+                            });
+                            
+                        }
                     });
 
             } else {
-                resolve();
+
+                Promise.all([this.ios_mic_permission(), this.ios_camera_permission()])
+                    .then(values => {
+                        console.log(JSON.stringify(values));
+                        resolve();
+                    },reason => {
+                        console.log(JSON.stringify(reason));
+                        this.set('error', reason);
+                        
+                        dialogs.alert("without mic and camera permissions \n you cannot meet potential matches through video chat. \n please allow permissions in settings and try again.").then(() => {
+
+                           UIApplication.sharedApplication.openURL(NSURL.URLWithString(UIApplicationOpenSettingsURLString));
+
+                        });
+
+                        reject()
+
+                    });
+
             }
 
-            
         })
 
+    }
 
+    ios_mic_permission(): Promise<any> {
+
+        return new Promise((resolve, reject) => {
+            
+            var has_asked = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio);
+
+            if (has_asked === 2) {
+                reject('mic permission denied');
+                return;
+            }
+
+            AVAudioSession.sharedInstance().requestRecordPermission((bool) => {
+                if (bool === true) {
+                    resolve(bool);
+                    return;
+                }
+                reject('mic permission denied');
+
+            });
+
+        })
+
+    }
+
+    ios_camera_permission(): Promise<any> {
+
+        return new Promise((resolve, reject) => {
+            
+            var has_asked = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo);
+
+            if (has_asked === 2) {
+                reject('camera permission denied');
+                return;
+            }
+
+            AVCaptureDevice.requestAccessForMediaTypeCompletionHandler(AVMediaTypeVideo, (bool) => {
+                if (bool === true) {
+                    resolve(bool);
+                    return;
+                }
+                reject('camera permission denied');
+
+            });
+
+        })
     }
 
 
     public disconnect() {
 
-        this.videoActivity.roomObj.disconnect();
+        if (this.videoActivity.room) {
+
+            this.videoActivity.disconnect();
+
+        }
 
     }
 
@@ -219,12 +328,6 @@ export class HelloWorldModel extends Observable {
         // console.dir(TVICameraCapturer.alloc().init().initWithFrameDelegate());
     }
 
-
-    public show_local_video() {
-
-        this.videoActivity.createAudioAndVideoTracks();
-
-    }
 
     public toggle_local_audio() {
 
@@ -240,25 +343,26 @@ export class HelloWorldModel extends Observable {
     }
 
     public connect_to_room(): void {    
-           
+        
+        let text = this.get('textfield');
 
-        this.videoActivity.connect_to_room('abc');
+        this.videoActivity.connect_to_room(text);
 
     }
 
 
-
-
     public getToken(): any {
+        console.log('getToken');
         let user = {
-            name: ''
+            uid: ''
         };
 
         if (app.android) {
-            user.name = 'android'
+            user.uid = 'android'
         } else {
-            user.name = 'ios';
+            user.uid = 'ios';
         }
+        
         return http.request({
             url: "https://us-central1-firebase-goblur.cloudfunctions.net/get_token",
             method: "POST",

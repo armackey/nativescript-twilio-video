@@ -34,6 +34,6 @@ export function navigatingTo(args: EventData) {
 
 export function onViewUnloaded(args: EventData) {
 
-    // model.remove_video_views();
+    model.disconnect();
 
 }

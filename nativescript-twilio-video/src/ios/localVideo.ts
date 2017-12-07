@@ -4,7 +4,19 @@ import { Observable, fromObject } from 'tns-core-modules/data/observable';
 
 import { VideoViewDelegate } from './delegates';
 
-declare var TVIVideoView, CGRectMake;
+declare var TVIVideoView;
+
+const rect = {
+    origin: {
+        x: 0,
+        y: 0
+    },
+    size: {
+        width: 100,
+        height: 100
+    }
+};
+
 // const videoView = TVIVideoView.alloc().init();
 
 export class LocalVideo extends View {
@@ -12,13 +24,18 @@ export class LocalVideo extends View {
     localVideoView: any;
     _videoViewDelegate: any; 
     nativeView: any;
-
+    
     constructor() {
         super();
-
-        this._videoViewDelegate = VideoViewDelegate.initWithOwner(new WeakRef(this));
-        this.localVideoView = TVIVideoView.alloc().initWithFrameDelegate(CGRectMake(0, 0, 0, 0), this._videoViewDelegate);    
-
+        // try {
+        //     this._videoViewDelegate = VideoViewDelegate.initWithOwner(new WeakRef(this));
+        //     this.localVideoView = TVIVideoView.alloc().init().initWithFrame(this._videoViewDelegate);
+        // } catch(e) {
+        //     console.log(e);
+        // }
+        this.localVideoView = TVIVideoView.alloc().init();
+        this.localVideoView.mirror = true;
+        this.localVideoView.contentMode = UIViewContentMode.ScaleAspectFill;
     }
 
     public createNativeView(): any {
@@ -29,11 +46,11 @@ export class LocalVideo extends View {
     }
 
 
-    public initNativeView(): void {  
+    // public initNativeView(): void {  
 
-        // this.nativeView.addSubview( this.localVideoView );
+    //     // this.nativeView.addSubview( this.localVideoView );
 
-    }
+    // }
 
     public disposeNativeView(): void {
         
@@ -41,11 +58,11 @@ export class LocalVideo extends View {
 
     }
 
-    get events(): Observable {
+    // get events(): Observable {
         
-        return this._videoViewDelegate.events;
+    //     return this._videoViewDelegate.events;
 
-    }
+    // }
 
     // get ios(): any {
 
@@ -57,16 +74,6 @@ export class LocalVideo extends View {
         
     //     this.nativeView.removeFromSuperview();
 
-    // }
-
-    // public onLoaded() {
-    //     // console.log(`onLoaded ${this.width}, ${this.height}`);
-    //     if (this.width) {
-    //         this.nativeView.frame.size.width = this.width;
-    //     }
-    //     if (this.height) {
-    //         this.nativeView.frame.size.height = this.height;
-    //     }
     // }
 
 }

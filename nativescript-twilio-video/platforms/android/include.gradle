@@ -8,5 +8,5 @@ android {
 }
 
 dependencies {
-    compile 'com.twilio:video-android:1.0.1'
+    compile 'com.twilio:video-android:2.0.0-preview6'
 }

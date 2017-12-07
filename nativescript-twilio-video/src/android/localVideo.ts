@@ -31,11 +31,11 @@ export class LocalVideo extends View {
     }
 
 
-    public initNativeView(): void {
+    // public initNativeView(): void {
 
-        // this.nativeView.addView(this.localVideoView);
+    //     // this.nativeView.addView(this.localVideoView);
 
-    }
+    // }
 
     public disposeNativeView() {
 

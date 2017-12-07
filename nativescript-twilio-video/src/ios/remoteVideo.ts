@@ -2,7 +2,7 @@ import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
 import { Observable, fromObject } from 'tns-core-modules/data/observable';
 
-import { VideoViewDelegate } from './delegates';
+// import { VideoViewDelegate } from './delegates';
 
 declare var TVIVideoView, CGRectMake;
 
@@ -15,9 +15,11 @@ export class RemoteVideo extends View {
 
     constructor() {
         super();
-
-        this._remoteViewDelegate = VideoViewDelegate.initWithOwner(new WeakRef(this));
-        this.remoteVideoView = TVIVideoView.alloc().initWithFrameDelegate(CGRectMake(0, 0, 0, 0), this._remoteViewDelegate);         
+        
+        // this._remoteViewDelegate = VideoViewDelegate.initWithOwner(new WeakRef(this));
+        this.remoteVideoView = TVIVideoView.alloc().init(); 
+        this.remoteVideoView.mirror = true;   
+        this.remoteVideoView.contentMode = UIViewContentMode.ScaleAspectFill;
     }
 
     public createNativeView() {
@@ -41,11 +43,11 @@ export class RemoteVideo extends View {
 
     }
 
-    get events(): Observable {
+    // get events(): Observable {
 
-        return this._remoteViewDelegate.events;
+    //     return this._remoteViewDelegate.events;
 
-    }
+    // }
 
     get ios(): any {
 

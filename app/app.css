@@ -11,18 +11,29 @@ components that have the btn class name.
 .btn {
     font-size: 18;
 }
-#local-video {
-    
-    width: 150;
-    height: 150;
-    /* background-color: blueviolet; */
-}
 #remote-video {
-    width: 150;
-    height: 150;
+    z-index: 0;
+}
+#local-video {
+    width: 100;
+    height: 100;
+    z-index: 10;
 }
 StackLayout {
-    background-color: green;
+    /* background-color: green; */
+}
+.box {
+    width: 50;
+    height: 50;
+    border: black;
+    border-left-width: 1; 
+    border-top-width: 1;    
+    border-right-width: 1;
+    border-bottom-width: 3;    
+}
+TextField {
+    background-color: beige;
+    height: 30;
 }
 .name {
     font-size: 18;
