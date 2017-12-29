@@ -1,38 +1,32 @@
 import { Observable, fromObject } from 'data/observable';
 import { Page } from 'ui/page';
 import * as app from "tns-core-modules/application";
-import { View } from "ui/core/view"
-import { LocalVideo, VideoActivity, RemoteVideo} from 'nativescript-twilio-video';
+import { LocalVideo, VideoActivity, RemoteVideo } from 'nativescript-twilio-video';
 import * as dialogs from "ui/dialogs";
 import { StackLayout } from 'tns-core-modules/ui/layouts/stack-layout/stack-layout';
+import { GridLayout, ItemSpec } from 'ui/layouts/grid-layout';
 
-var http = require("http");
-var permissions = require('nativescript-permissions');
+const http = require("http");
+const permissions = require('nativescript-permissions');
 const timer = require("timer");
 
 
 
-export class HelloWorldModel extends Observable {
-    
-    private localVideo: LocalVideo;
-    private remoteVideo: RemoteVideo;
-    private accessToken: string;
-    private roomName: string;
+export class VideoChat extends Observable {
+    container: any;
+
+    public localVideo: LocalVideo;
+    public remoteVideo: RemoteVideo;
+    public accessToken: string;
+    public room: string;
     public name: string;
-    private heros: any;
-    public participant: any;
-    public countdown: number = 60;
-    public roomButton: any;
-    public uiview: UIView;
-    localVideoView: any;
-    error: string;
-    videoTrack: any;
-    videoActivity: VideoActivity;
+    public error: string;
+    public videoActivity: VideoActivity;
 
     constructor(private page: Page) {
         super();
 
-        var container = <StackLayout>this.page.getViewById('s');
+        this.container = <StackLayout>this.page.getViewById('container');
 
         this.videoActivity = new VideoActivity();
 
@@ -40,88 +34,61 @@ export class HelloWorldModel extends Observable {
 
         this.remoteVideo = new RemoteVideo();
 
-        this.localVideo.className = 'box';
-        
-        this.remoteVideo.className = 'box';
-
-        container.insertChild(this.localVideo, 0);
-
-        container.insertChild(this.remoteVideo, 1);
-        
         this.videoActivity.localVideoView = this.localVideo.localVideoView;
-        
+
         this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
 
-        // timer.setInterval(() => {
-        //     console.log(this.videoActivity.remoteParticipants ? this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack : undefined);
-        // }, 3000)
+        this.add_video_views();
 
         this.videoActivity.event.on('error', (reason) => {
             this.set("error", reason.object['reason']);
             console.log(JSON.stringify(reason.object['reason']));
         });
-        
+
 
         this.videoActivity.event.on('didConnectToRoom', (r) => {
             if (r.object['count'] < 1) return;
-            console.log("didConnectToRoom zz");
-            console.log(JSON.stringify(r));
+            console.log("didConnectToRoom");
+            this.toggle_local_video_size();
         });
 
         this.videoActivity.event.on('didFailToConnectWithError', (r) => {
-            // if (app.ios) this.cleanupRemoteParticipant();
-            
             console.log("didFailToConnectWithError");
         });
 
         this.videoActivity.event.on('participantDidConnect', (r) => {
             if (r.object['count'] < 1) return;
-            if (app.ios && container.getChildIndex(this.remoteVideo) === -1) {
-                console.log('adding view');
-                this.add_remote_view(container);
-            }
-            
-            console.log(JSON.stringify(r));
             console.log("participantDidConnect");
+            this.toggle_local_video_size();
         });
 
         this.videoActivity.event.on('participantDidDisconnect', (r) => {
-            if (app.ios) {
-                container.removeChild(this.remoteVideo);
-                // this.cleanupRemoteParticipant();
-            }
-            
             console.log("participantDidDisconnect");
+            this.toggle_local_video_size();
         });
 
-        // this.videoActivity.event.on('participantUnpublishedAudioTrack', (r) => {
-        //     console.log("participantUnpublishedAudioTrack");
-        // });
+        this.videoActivity.event.on('participantUnpublishedAudioTrack', (r) => {
+            console.log("participantUnpublishedAudioTrack");
+        });
 
-        // this.videoActivity.event.on('participantPublishedVideoTrack', (r) => {
-        //     console.log("participantPublishedVideoTrack");
-        // });
+        this.videoActivity.event.on('participantPublishedVideoTrack', (r) => {
+            console.log("participantPublishedVideoTrack");
+        });
 
-        // this.videoActivity.event.on('participantUnpublishedVideoTrack', (r) => {
-        //     console.log("participantUnpublishedVideoTrack");
-        // });
+        this.videoActivity.event.on('participantUnpublishedVideoTrack', (r) => {
+            console.log("participantUnpublishedVideoTrack");
+        });
 
-        // this.videoActivity.event.on('onAudioTrackSubscribed', (r) => {
-        //     console.log("onAudioTrackSubscribed");
-        // });
+        this.videoActivity.event.on('onAudioTrackSubscribed', (r) => {
+            console.log("onAudioTrackSubscribed");
+        });
 
-        // this.videoActivity.event.on('onAudioTrackUnsubscribed', (r) => {
-        //     console.log("onAudioTrackUnsubscribed");
-        // });
+        this.videoActivity.event.on('onAudioTrackUnsubscribed', (r) => {
+            console.log("onAudioTrackUnsubscribed");
+        });
 
         this.videoActivity.event.on('onVideoTrackSubscribed', (r) => {
-            console.log("onVideoTrackSubscribed 00");
-            if (app.ios) {
-                // this.videoTrack = this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack;
-                console.log(this.videoActivity.videoTrack);
-                // this.add_remote_view();
-                // this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
-            }
+            console.log("onVideoTrackSubscribed");
         });
 
         this.videoActivity.event.on('onVideoTrackUnsubscribed', (r) => {
@@ -144,54 +111,52 @@ export class HelloWorldModel extends Observable {
             console.log("participantEnabledAudioTrack");
         });
 
-        
-        this.getPermissions()
+
+        this.get_permissions()
             .then(() => {
+                // i find the settimeout allows for a smoother load if you're looking for the preview to begin immediately
                 var t = timer.setTimeout(() => {
                     this.videoActivity.startPreview();
                     timer.clearTimeout(t);
                 }, 1200)
-            })
-            .then(() => this.getToken())
-            .then((result) => {
-                var result = result.content.toJSON();
-                this.videoActivity.set_access_token(result['token']);
-                // this.videoActivity.accessToken = result['token'];
-            })
-   
-
+            });
     }
 
-    // cleanupRemoteParticipant(): void {
-    //     this.videoTrack.removeRenderer(this.videoActivity.remoteVideoView);
-    //     this.videoActivity.remoteVideoView.removeFromSuperview();
-    //     // if (this.videoActivity.remoteParticipants && this.videoActivity.remoteParticipants.videoTracks.count > 0) {
-    //     //     var videoTrack = this.videoActivity.remoteParticipants.remoteVideoTracks[0].remoteTrack;
-    //     //     console.log(videoTrack);
-    //     //     if (videoTrack === null) return this.cleanupRemoteParticipant();
-
-    //     //     videoTrack.removeRenderer(this.videoActivity.remoteVideoView);
-            
-
-
-    //     this.videoActivity.remoteParticipants = undefined;
-    //     // }
-    // }
-
-    add_remote_view(c): void {
-        this.remoteVideo = new RemoteVideo();
-        this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
-        this.remoteVideo.className = 'box';
-        c.insertChild(this.remoteVideo, 1);
+    toggle_local_video_size(): void {
+        if (this.localVideo.className === 'large') {
+            this.localVideo.className = 'small';
+            GridLayout.setColumn(this.localVideo, 1);
+            GridLayout.setRow(this.localVideo, 0);
+        } else {
+            this.localVideo.className = 'large';
+            GridLayout.setColumnSpan(this.localVideo, 2);
+            GridLayout.setRowSpan(this.localVideo, 2);
+        }
     }
+
+    add_video_views(): void {
+        this.localVideo.id = 'local-video';
+        this.localVideo.className = 'large';
+        this.remoteVideo.id = 'remote-video';
+
+        this.localVideo.on('tap', this.toggle_local_video_size.bind(this));
+
+        GridLayout.setColumnSpan(this.remoteVideo, 2);
+        GridLayout.setRowSpan(this.remoteVideo, 2);
+        GridLayout.setColumnSpan(this.localVideo, 2);
+        GridLayout.setRowSpan(this.localVideo, 2);
+        this.container.insertChild(this.remoteVideo, 0);
+        this.container.insertChild(this.localVideo, 0);
+    }
+
 
 
     check_permissions(): boolean {
         var audio, camera;
 
         if (app.android) {
-            audio = permissions.hasPermission("android.permission.RECORD_AUDIO")    
-            camera = permissions.hasPermission("android.permission.CAMERA") 
+            audio = permissions.hasPermission("android.permission.RECORD_AUDIO")
+            camera = permissions.hasPermission("android.permission.CAMERA")
         } else {
             camera = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo);
             audio = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio);
@@ -204,10 +169,10 @@ export class HelloWorldModel extends Observable {
 
     }
 
-    getPermissions(): Promise<any> {
+    get_permissions(): Promise<any> {
 
         return new Promise((resolve, reject) => {
-            
+
             var has_permissions = this.check_permissions();
 
             if (has_permissions) {
@@ -231,10 +196,10 @@ export class HelloWorldModel extends Observable {
 
                         if (!has_permissions) {
 
-                            dialogs.alert("without mic and camera permissions \n you cannot meet potential matches through video chat. \n please allow permissions in settings and try again.").then(() => {
+                            dialogs.alert("without mic and camera permissions \n you cannot connect. \n please allow permissions in settings and try again.").then(() => {
 
                             });
-                            
+
                         }
                     });
 
@@ -244,13 +209,13 @@ export class HelloWorldModel extends Observable {
                     .then(values => {
                         console.log(JSON.stringify(values));
                         resolve();
-                    },reason => {
+                    }, reason => {
                         console.log(JSON.stringify(reason));
                         this.set('error', reason);
-                        
-                        dialogs.alert("without mic and camera permissions \n you cannot meet potential matches through video chat. \n please allow permissions in settings and try again.").then(() => {
 
-                           UIApplication.sharedApplication.openURL(NSURL.URLWithString(UIApplicationOpenSettingsURLString));
+                        dialogs.alert("without mic and camera permissions \n you cannot connect. \n please allow permissions in settings and try again.").then(() => {
+
+                            UIApplication.sharedApplication.openURL(NSURL.URLWithString(UIApplicationOpenSettingsURLString));
 
                         });
 
@@ -267,7 +232,7 @@ export class HelloWorldModel extends Observable {
     ios_mic_permission(): Promise<any> {
 
         return new Promise((resolve, reject) => {
-            
+
             var has_asked = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeAudio);
 
             if (has_asked === 2) {
@@ -291,7 +256,7 @@ export class HelloWorldModel extends Observable {
     ios_camera_permission(): Promise<any> {
 
         return new Promise((resolve, reject) => {
-            
+
             var has_asked = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo);
 
             if (has_asked === 2) {
@@ -314,18 +279,12 @@ export class HelloWorldModel extends Observable {
 
     public disconnect() {
 
-        if (this.videoActivity.room) {
+        if (this.room) {
 
             this.videoActivity.disconnect();
 
         }
 
-    }
-
-
-
-    public add_time() {
-        // console.dir(TVICameraCapturer.alloc().init().initWithFrameDelegate());
     }
 
 
@@ -342,35 +301,29 @@ export class HelloWorldModel extends Observable {
 
     }
 
-    public connect_to_room(): void {    
-        
-        let text = this.get('textfield');
-
-        this.videoActivity.connect_to_room(text);
-
+    public connect_to_room(): void {
+        if (!this.get('name') || !this.get('room') || this.get('name').length < 1 || this.get('room').length < 1)
+            return this.set('error', "Missing Info.");
+        else this.set('error', "");
+        this.get_token()
+            .then(result => {
+                var result = result.content.toJSON();
+                this.videoActivity.set_access_token(result['token']);
+                this.videoActivity.connect_to_room(this.get('room'));
+            }, e => {
+                this.set('error', e);
+            });
     }
 
 
-    public getToken(): any {
-        console.log('getToken');
-        let user = {
-            uid: ''
-        };
-
-        if (app.android) {
-            user.uid = 'android'
-        } else {
-            user.uid = 'ios';
-        }
-        
+    public get_token(): Promise<any> {
+        let name = this.get('name')
         return http.request({
             url: "https://us-central1-firebase-goblur.cloudfunctions.net/get_token",
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            content: JSON.stringify(user)
+            content: JSON.stringify({ uid: name })
         });
-
-
     }
 
 
