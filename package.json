@@ -3,6 +3,8 @@
   "license": "SEE LICENSE IN <your-license-filename>",
   "readme": "NativeScript Application",
   "repository": "<fill-your-repository-here>",
+  "name": "nativescript-twilio-video",
+  "version": "1.0.0",
   "nativescript": {
     "id": "org.nativescript.videochat",
     "tns-android": {

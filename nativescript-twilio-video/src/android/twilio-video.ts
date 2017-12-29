@@ -30,7 +30,7 @@ const Room = com.twilio.video.Room;
 const VideoTrack = com.twilio.video.VideoTrack;
 // const CameraCapturerCompat = com.twilio.video.util.CameraCapturerCompat;
 
-export class VideoActivity {
+export class VideoActivity implements VideoActivityBase {
 
     public previousAudioMode: any;
     public localVideoView: any;
@@ -49,28 +49,27 @@ export class VideoActivity {
     private _roomListener: any;
     private _participantListener: any;
     public participant: any;
-    LOCAL_VIDEO_TRACK_NAME: string = 'camera';
 
     constructor() {
         this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
         this._event = new Observable();
         // setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-        application.on('suspend', () => {
-            if (this.localVideoTrack && this.localVideoTrack !== null) {
-                /*
-                 * If this local video track is being shared in a Room, unpublish from room before
-                 * releasing the video track. Participants will be notified that the track has been
-                 * unpublished.
-                 */
-                if (this.localParticipant) {
-                    this.localParticipant.unpublishTrack(this.localVideoTrack);
-                }
+        // application.on('suspend', () => {
+        //     if (this.localVideoTrack && this.localVideoTrack !== null) {
+        //         /*
+        //          * If this local video track is being shared in a Room, unpublish from room before
+        //          * releasing the video track. Participants will be notified that the track has been
+        //          * unpublished.
+        //          */
+        //         if (this.localParticipant) {
+        //             this.localParticipant.unpublishTrack(this.localVideoTrack);
+        //         }
 
-                this.localVideoTrack.release();
-                this.localVideoTrack = null;
-            }
-        });
+        //         this.localVideoTrack.release();
+        //         this.localVideoTrack = null;
+        //     }
+        // });
 
     }
 
@@ -291,16 +290,11 @@ export class VideoActivity {
 
                     if (participant.getVideoTracks().size() > 0) {
 
-                        console.log(participant);
-
                         self.addRemoteParticipant(participant);
 
                     }
 
                 }
-
-
-                console.log("didConnectToRoom");
 
             },
             onConnectFailure(room, error) {
@@ -317,15 +311,15 @@ export class VideoActivity {
                 self.room = '';
                 self.localParticipant = null;
                 self.configure_audio(false)
-                // if (self._event) {
-                //     self._event.notify({
-                //         eventName: 'onDisconnected',
-                //         object: fromObject({
-                //             room: room,
-                //             error: error
-                //         })
-                //     })
-                // }
+                if (self._event) {
+                    self._event.notify({
+                        eventName: 'onDisconnected',
+                        object: fromObject({
+                            room: room,
+                            error: error
+                        })
+                    })
+                }
             },
             onParticipantConnected(room, participant) {
                 console.log('participantDidConnect');
@@ -582,29 +576,6 @@ export class VideoActivity {
         }
 
     }
-
-    // public remove_video_chat_twilio_listeners(): void {
-
-    //     this.event.off('onConnected');
-    //     this.event.off('onParticipantConnected');
-    //     this.event.off('onVideoTrackAdded');
-    //     this.event.off('onDisconnected');
-    //     this.event.off('onConnectFailure');
-    //     this.event.off('onParticipantDisconnected');
-    //     this.event.off('onAudioTrackAdded');
-    //     this.event.off('onVideoTrackRemoved');
-    //     this.event.off('onAudioTrackEnabled');
-    //     this.event.off('onAudioTrackDisabled');
-    //     this.event.off('onVideoTrackEnabled');
-    //     this.event.off('onVideoTrackDisabled');
-    //     this.event.off('subscribedToVideoTrackPublicationForParticipant');
-    //     this.event.off('unsubscribedFromVideoTrackPublicationForParticipant');
-    // }
-
-    /**
-     * currently not using toggle_local_audio
-     * not sure if its better to use this method or configure_audio
-     */
 
     public toggle_local_audio() {
 

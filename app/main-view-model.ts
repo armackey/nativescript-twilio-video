@@ -13,8 +13,8 @@ const timer = require("timer");
 
 
 export class VideoChat extends Observable {
-    container: any;
-
+    
+    public container: any;
     public localVideo: LocalVideo;
     public remoteVideo: RemoteVideo;
     public accessToken: string;
@@ -129,13 +129,14 @@ export class VideoChat extends Observable {
             GridLayout.setRow(this.localVideo, 0);
         } else {
             this.localVideo.className = 'large';
+            GridLayout.setColumn(this.localVideo, 0);
             GridLayout.setColumnSpan(this.localVideo, 2);
             GridLayout.setRowSpan(this.localVideo, 2);
         }
     }
 
     add_video_views(): void {
-        this.localVideo.id = 'local-video';
+        // this.localVideo.id = 'local-video';
         this.localVideo.className = 'large';
         this.remoteVideo.id = 'remote-video';
 
@@ -143,8 +144,10 @@ export class VideoChat extends Observable {
 
         GridLayout.setColumnSpan(this.remoteVideo, 2);
         GridLayout.setRowSpan(this.remoteVideo, 2);
+        GridLayout.setRow(this.remoteVideo, 0);
         GridLayout.setColumnSpan(this.localVideo, 2);
         GridLayout.setRowSpan(this.localVideo, 2);
+        GridLayout.setRow(this.localVideo, 0);
         this.container.insertChild(this.remoteVideo, 0);
         this.container.insertChild(this.localVideo, 0);
     }
@@ -279,7 +282,7 @@ export class VideoChat extends Observable {
 
     public disconnect() {
 
-        if (this.room) {
+        if (this.videoActivity.room) {
 
             this.videoActivity.disconnect();
 
@@ -319,7 +322,7 @@ export class VideoChat extends Observable {
     public get_token(): Promise<any> {
         let name = this.get('name')
         return http.request({
-            url: "https://us-central1-firebase-goblur.cloudfunctions.net/get_token",
+            url: "url",
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({ uid: name })

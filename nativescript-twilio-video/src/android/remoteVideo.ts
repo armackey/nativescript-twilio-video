@@ -24,28 +24,15 @@ export class RemoteVideo extends View {
     public createNativeView() {
 
         return this.remoteVideoView;
-        // return new android.widget.LinearLayout(utils.ad.getApplicationContext());
 
     }
 
-
-    public initNativeView(): void {
-
-        // this.nativeView.addView(this.remoteVideoView);
-
-    }
 
     public disposeNativeView() {
 
         this.nativeView = null;
 
     }
-
-    // public removeVideoView() {
-
-    //     this.nativeView.removeView(this.remoteVideoView);
-
-    // }
 
 
 }

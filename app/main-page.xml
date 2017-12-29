@@ -25,38 +25,28 @@ xmlns:TV="nativescript-twilio-video">
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
-    <StackLayout id="s">
+    <GridLayout id="container" width="100%" height="100%" columns="*,*" rows="auto,auto">
         
-        <Label text="{{ error }}"></Label>
-<!-- 
-        <GridLayout columns="auto" rows="auto">
-            <TV:RemoteVideo stretch="aspectFill" width="100%" height="150" id="remote-video"></TV:RemoteVideo>
-            <TV:LocalVideo horizontalAlignment="right" verticalAlignment="bottom" width="90" height="90" id="local-video"></TV:LocalVideo>
-        </GridLayout> -->
+        <Label 
+            verticalAlignment="top" 
+            text="{{ error }}" 
+            colSpan="2" row="0" textWrap="true" visibility="{{ error === '' || !error ? 'collapse' : 'visible' }}"></Label>
 
-        <TextField height="40" text="{{textfield}}" />
+        <StackLayout id="actions" row="1" colSpan="2" width="100%" verticalAlignment="bottom">
 
-        <Button text="connect" class="btn btn-primary btn-active" tap="{{ connect_to_room }}"></Button>
+            <TextField id="name" text="{{ name }}" hint="Your Name"></TextField>
 
-        <Button text="disconnect" class="btn btn-primary btn-active" tap="{{ disconnect }}"></Button>
+            <TextField id="room" text="{{ room }}" hint="Room Name"></TextField>
 
-        
-        
-        <!--<Label text="{{ participant }}"></Label>-->
-        <!--<TextView hint="room name" text="{{ roomName }}"></TextView>-->
-        
-        <!-- <Button text="show local video" tap="{{ show_local_video }}" class="btn btn-primary btn-active"/>
+            <Button text="Toggle Mic" tap="{{ toggle_local_audio }}"></Button>
 
-        <Button text="toggle local video" tap="{{ toggle_local_video }}"  class="btn btn-primary btn-active"></Button>
+            <Button text="Toggle Camera" tap="{{ toggle_local_video }}"></Button>
 
-        <Button text="toggle local audio" tap="{{ toggle_local_audio }}" class="btn btn-primary btn-active"></Button>
+            <Button text="Connect" tap="{{ connect_to_room }}"></Button>
 
-        <Button text="connect to room" tap="{{ connect_to_room }}"  class="btn btn-primary btn-active"></Button>
+            <Button text="Disconnect" tap="{{ disconnect }}"></Button>
 
-        <Button text="disconnect" tap="{{ disconnect }}"  class="btn btn-primary btn-active" ></Button>
+        </StackLayout>
 
-        
-        -->
-
-    </StackLayout> 
+    </GridLayout> 
 </Page>

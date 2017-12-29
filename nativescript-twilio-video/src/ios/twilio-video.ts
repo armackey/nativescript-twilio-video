@@ -18,7 +18,7 @@ declare var TVIConnectOptions,
             TVICameraCaptureSourceFrontCamera;
 
 
-export class VideoActivity {
+export class VideoActivity implements VideoActivityBase {
 
     localVideoView: any;
     remoteVideoView: any;
@@ -39,12 +39,9 @@ export class VideoActivity {
     // event: Observable;
     room: any;
     camera: any;
-    test: string;
     
     constructor() { 
 
-        // this.event = new Observable();
-        
         // this._cameraCapturerDelegate = CameraCapturerDelegate.initWithOwner(new WeakRef(this));
         
         this._roomDelegate = RoomDelegate.initWithOwner(new WeakRef(this), this);
@@ -52,26 +49,6 @@ export class VideoActivity {
         this._participantDelegate = RemoteParticipantDelegate.initWithOwner(new WeakRef(this), this);      
 
     }
-
-    // public remove_video_chat_twilio_listeners(): void {
-
-    //     this.event.off('onConnected');
-    //     this.event.off('onParticipantConnected');
-    //     this.event.off('onVideoTrackAdded');
-    //     this.event.off('onDisconnected');
-    //     this.event.off('onConnectFailure');
-    //     this.event.off('onParticipantDisconnected');
-    //     this.event.off('onAudioTrackAdded');
-    //     this.event.off('onVideoTrackRemoved');
-    //     this.event.off('onAudioTrackEnabled');
-    //     this.event.off('onAudioTrackDisabled');
-    //     this.event.off('onVideoTrackEnabled');
-    //     this.event.off('onVideoTrackDisabled');
-    //     this.event.off('subscribedToVideoTrackPublicationForParticipant');
-    //     this.event.off('unsubscribedFromVideoTrackPublicationForParticipant');
-    // }
-
-
 
     startPreview() {
         // TVICameraCapturer is not supported with the Simulator.
@@ -188,8 +165,6 @@ export class VideoActivity {
         // Connect to the Room using the options we provided.
         this.room = TwilioVideo.connectWithOptionsDelegate(connectOptions, this._roomDelegate);
 
-        // [self logMessage:[NSString stringWithFormat:@"Attempting to connect to room %@", self.roomTextField.text]];
-
     }
 
 
@@ -244,29 +219,6 @@ export class VideoActivity {
         this.accessToken = token;
 
     }
-
-    // public remove_remote_view(videoTrack, participant): void {
-    //     console.log('remove_remote_view');
-    //     if (this.remoteParticipants === participant && this.remoteVideoView !== null) {
-
-    //         try {
-
-    //             videoTrack.removeRenderer(this.remoteVideoView);
-
-    //         } catch(e) {
-
-    //             console.log(e);
-
-    //             this.notify(e);
-
-    //         }
-            
-            
-    //         // this.remoteVideoView.removeFromSuperview();
-
-    //     }
-
-    // }
 
     public add_video_track(videoTrack) {
 

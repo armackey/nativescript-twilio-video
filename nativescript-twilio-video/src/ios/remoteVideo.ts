@@ -24,18 +24,9 @@ export class RemoteVideo extends View {
 
     public createNativeView() {
 
-        // return UIView.new();
         return this.remoteVideoView;
 
     }    
-
-
-    public initNativeView(): void {
-
-        // this.nativeView.addSubview(this.remoteVideoView);
-        
-
-    }
 
     public disposeNativeView(): void {
 
@@ -43,23 +34,11 @@ export class RemoteVideo extends View {
 
     }
 
-    // get events(): Observable {
-
-    //     return this._remoteViewDelegate.events;
-
-    // }
 
     get ios(): any {
 
         return this.nativeView;
 
     }  
-
-    // public removeVideoView() {
-
-    //     this.nativeView.removeFromSuperview();
-        
-    // }
-
 
 }
