@@ -2,7 +2,7 @@
   "description": "NativeScript Application",
   "license": "SEE LICENSE IN <your-license-filename>",
   "readme": "NativeScript Application",
-  "repository": "<fill-your-repository-here>",
+  "repository": "https://github.com/armackey/nativescript-twilio-video.git",
   "name": "nativescript-twilio-video",
   "version": "1.0.0",
   "nativescript": {
