@@ -4,7 +4,7 @@
   "readme": "NativeScript Application",
   "repository": "https://github.com/armackey/nativescript-twilio-video.git",
   "name": "nativescript-twilio-video",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "nativescript": {
     "id": "org.nativescript.videochat",
     "tns-android": {
