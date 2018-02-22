@@ -7,6 +7,7 @@ import { VideoActivityBase } from "../twilio-common";
 import * as application from "tns-core-modules/application";
 
 var app = require("application");
+var utilsModule = require("tns-core-modules/utils/utils");
 
 declare var com, android: any;
 
@@ -28,9 +29,11 @@ const LocalVideoTrack = com.twilio.video.LocalVideoTrack;
 const Participant = com.twilio.video.RemoteParticipant;
 const Room = com.twilio.video.Room;
 const VideoTrack = com.twilio.video.VideoTrack;
-// const CameraCapturerCompat = com.twilio.video.util.CameraCapturerCompat;
 
-export class VideoActivity implements VideoActivityBase {
+
+export class VideoActivity {
+    videoCodec: any;
+    audioCodec: any;
 
     public previousAudioMode: any;
     public localVideoView: any;
@@ -46,30 +49,21 @@ export class VideoActivity implements VideoActivityBase {
     public localParticipant: any;
     public audioManager: any;
     private _event: Observable;
-    private _roomListener: any;
-    private _participantListener: any;
     public participant: any;
 
     constructor() {
-        this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
+
         this._event = new Observable();
-        // setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-        // application.on('suspend', () => {
-        //     if (this.localVideoTrack && this.localVideoTrack !== null) {
-        //         /*
-        //          * If this local video track is being shared in a Room, unpublish from room before
-        //          * releasing the video track. Participants will be notified that the track has been
-        //          * unpublished.
-        //          */
-        //         if (this.localParticipant) {
-        //             this.localParticipant.unpublishTrack(this.localVideoTrack);
-        //         }
-
-        //         this.localVideoTrack.release();
-        //         this.localVideoTrack = null;
-        //     }
-        // });
+        /*
+         * Update preferred audio and video codec in case changed in settings
+         */
+        // this.audioCodec = getCodecPreference(SettingsActivity.PREF_AUDIO_CODEC,
+        //     SettingsActivity.PREF_AUDIO_CODEC_DEFAULT,
+        //     AudioCodec.class);
+        // this.videoCodec = getCodecPreference(SettingsActivity.PREF_VIDEO_CODEC,
+        //     SettingsActivity.PREF_VIDEO_CODEC_DEFAULT,
+        //     VideoCodec.class);        
 
     }
 
@@ -79,24 +73,78 @@ export class VideoActivity implements VideoActivityBase {
 
     }
 
-    startPreview(): Promise<any> {
+    public connect_to_room(roomName: string, options: { video: boolean, audio: boolean }) {
 
-        return new Promise((resolve, reject) => {
-        
-            if (this.localVideoTrack && this.localVideoTrack !== null) {
-                resolve();
-                return;
-            };
-            
-            this.localVideoView.setMirror(true);
-            // this.cameraCapturer = new CameraCapturer(utils.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA, this.cameraListener());
-            this.cameraCapturer = new CameraCapturer(utils.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA, null);
-            this.localVideoTrack = LocalVideoTrack.create(utils.ad.getApplicationContext(), true, this.cameraCapturer);
-            this.localVideoTrack.addRenderer(this.localVideoView);
 
-            resolve();
+        if (!this.accessToken) {
 
-        })
+            this.onError('Please provide a valid token to connect to a room');
+
+            return;
+
+        }
+
+        let connectOptionsBuilder = new ConnectOptions.Builder(this.accessToken).roomName(roomName);
+
+        if (!this.localAudioTrack && options.audio) {
+
+            app.android.foregroundActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+
+            this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
+
+            this.audioManager.setSpeakerphoneOn(true);
+
+            this.configure_audio(true);            
+
+            this.localAudioTrack = com.twilio.video.LocalAudioTrack.create(utilsModule.ad.getApplicationContext(), true, "mic");
+            /*
+            * Add local audio track to connect options to share with participants.
+            */
+            connectOptionsBuilder.audioTracks(java.util.Collections.singletonList(this.localAudioTrack));
+
+        }
+
+        /*
+         * Add local video track to connect options to share with participants.
+         */
+
+        if (!this.localVideoTrack && options.video) {
+
+            this.startPreview();
+
+            connectOptionsBuilder.videoTracks(java.util.Collections.singletonList(this.localVideoTrack));
+
+        }
+
+        /*
+         * Set the preferred audio and video codec for media.
+         */
+        // connectOptionsBuilder.preferAudioCodecs(java.util.Collections.singletonList(audioCodec));
+        // connectOptionsBuilder.preferVideoCodecs(java.util.Collections.singletonList(videoCodec));
+
+        /*
+         * Set the sender side encoding parameters.
+         */
+        // connectOptionsBuilder.encodingParameters(encodingParameters);
+
+        // room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
+        // setDisconnectAction();        
+
+
+        this.room = com.twilio.video.Video.connect(utilsModule.ad.getApplicationContext(), connectOptionsBuilder.build(), this.roomListener());
+
+    }
+
+    startPreview(): any {
+
+        if (this.localVideoTrack && this.localVideoTrack !== null) {
+            return;
+        };
+        // this.cameraCapturer = new CameraCapturer(utilsModule.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA, this.cameraListener());
+        this.cameraCapturer = new CameraCapturer(utilsModule.ad.getApplicationContext(), CameraCapturer.CameraSource.FRONT_CAMERA, null);
+        this.localVideoTrack = LocalVideoTrack.create(utilsModule.ad.getApplicationContext(), true, this.cameraCapturer, 'camera');
+        this.localVideoTrack.addRenderer(this.localVideoView);
+        this.localVideoView.setMirror(true);
 
     }
 
@@ -117,39 +165,6 @@ export class VideoActivity implements VideoActivityBase {
 
     }
 
-    prepareLocalMedia(): Promise<any> {
-        // We will share local audio and video when we connect to room.
-        // Create an audio track.
-        return new Promise((resolve, reject) => {
-
-            if (!this.localAudioTrack) {
-
-                this.localAudioTrack = LocalAudioTrack.create(utils.ad.getApplicationContext(), true);
-
-                if (!this.localAudioTrack) {
-
-                    this.onError("Failed to add audio track");
-
-                    reject("Failed to add audio track");
-
-                    return;
-
-                }
-
-            }
-
-            // Create a video track which captures from the camera.
-            if (!this.localVideoTrack) {
-
-                this.startPreview();
-
-            }
-
-            resolve();
-
-        });
-
-    }
 
     onError(reason: string) {
         this._event.notify({
@@ -184,50 +199,11 @@ export class VideoActivity implements VideoActivityBase {
             }
         }
 
-}
-
-    public connect_to_room(roomName: string) {
-
-        if (!this.accessToken) {
-
-            this.onError('Please provide a valid token to connect to a room');
-
-            return;
-
-        }
-
-        this.configure_audio(true);
-
-        this.prepareLocalMedia();
-
-        let connectOptionsBuilder = new ConnectOptions.Builder(this.accessToken).roomName(roomName);
-
-        if (this.localAudioTrack) {
-            /*
-            * Add local audio track to connect options to share with participants.
-            */
-            connectOptionsBuilder.audioTracks(java.util.Collections.singletonList(this.localAudioTrack));
-
-        }
-
-        /*
-         * Add local video track to connect options to share with participants.
-         */
-
-        if (this.localVideoTrack) {
-
-            connectOptionsBuilder.videoTracks(java.util.Collections.singletonList(this.localVideoTrack));
-
-        }
-
-        this.room = Video.connect(utils.ad.getApplicationContext(), connectOptionsBuilder.build(), this.roomListener());
-
-
     }
 
-   /*
-    * Set primary view as renderer for participant video track
-    */
+    /*
+     * Set primary view as renderer for participant video track
+     */
     public addRemoteParticipantVideo(videoTrack) {
         this.remoteVideoView.setMirror(true);
         videoTrack.addRenderer(this.remoteVideoView);
@@ -258,7 +234,7 @@ export class VideoActivity implements VideoActivityBase {
                         view: 'view',
                     })
                 })
-            }, 
+            },
             onError(e) {
                 self.onError(e);
             }
@@ -271,7 +247,7 @@ export class VideoActivity implements VideoActivityBase {
 
         return new Room.Listener({
             onConnected(room) {
-                
+
                 var list = room.getRemoteParticipants();
 
                 self.localParticipant = room.getLocalParticipant();
@@ -298,7 +274,7 @@ export class VideoActivity implements VideoActivityBase {
 
             },
             onConnectFailure(room, error) {
-                self.configure_audio(false);
+                // self.configure_audio(false);
                 self._event.notify({
                     eventName: 'didFailToConnectWithError',
                     object: fromObject({
@@ -310,7 +286,7 @@ export class VideoActivity implements VideoActivityBase {
             onDisconnected(room, error) {
                 self.room = '';
                 self.localParticipant = null;
-                self.configure_audio(false)
+                // self.configure_audio(false)
                 if (self._event) {
                     self._event.notify({
                         eventName: 'onDisconnected',
@@ -495,7 +471,7 @@ export class VideoActivity implements VideoActivityBase {
                         participant: participant,
                         publication: publication
                     })
-                })                
+                })
             }
 
         });
@@ -536,7 +512,7 @@ export class VideoActivity implements VideoActivityBase {
     }
 
     public requestAudioFocus() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION.SDK_INT >= 25) {
 
             var playbackAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
@@ -544,13 +520,13 @@ export class VideoActivity implements VideoActivityBase {
                 .build();
 
             var focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-                    .setAudioAttributes(playbackAttributes)
-                    .setAcceptsDelayedFocusGain(true)
-                    .setOnAudioFocusChangeListener(new AudioManager.OnAudioFocusChangeListener({
-                        onAudioFocusChange(i) {
-                            console.log(i);
-                        }
-                    }).build());
+                .setAudioAttributes(playbackAttributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setOnAudioFocusChangeListener(new AudioManager.OnAudioFocusChangeListener({
+                    onAudioFocusChange(i) {
+                        console.log(i);
+                    }
+                }).build());
 
             this.audioManager.requestAudioFocus(focusRequest);
 

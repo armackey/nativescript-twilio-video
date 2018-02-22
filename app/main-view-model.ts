@@ -312,7 +312,7 @@ export class VideoChat extends Observable {
             .then(result => {
                 var result = result.content.toJSON();
                 this.videoActivity.set_access_token(result['token']);
-                this.videoActivity.connect_to_room(this.get('room'));
+                this.videoActivity.connect_to_room(this.get('room'), {video: true, audio: true});
             }, e => {
                 this.set('error', e);
             });

@@ -1,13 +1,13 @@
 {
     "name": "nativescript-twilio-video",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "description": "Your awesome NativeScript plugin.",
     "main": "twilio-video",
     "typings": "index.d.ts",
     "nativescript": {
         "platforms": {
-            "android": "3.0.1",
-            "ios": "3.0.1"
+            "android": "3.4.1",
+            "ios": "3.4.1"
         }
     },
     "repository": {
@@ -31,7 +31,7 @@
     "homepage": "https://github.com/armackey/nativescript-twilio-video",
     "readmeFilename": "README.md",
     "devDependencies": {
-        "tns-core-modules": "~3.0.1",
+        "tns-core-modules": "~3.4.1",
         "tns-platform-declarations": "^3.0.1",
         "typescript": "~2.2.1",
         "prompt": "~1.0.0",
