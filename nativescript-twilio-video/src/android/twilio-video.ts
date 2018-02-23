@@ -1,11 +1,7 @@
 import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
-import { RemoteVideo } from "./remoteVideo";
-import { LocalVideo } from "./localVideo";
 import { Observable, fromObject } from 'tns-core-modules/data/observable';
-import { VideoActivityBase } from "../twilio-common";
 import * as application from "tns-core-modules/application";
-
 var app = require("application");
 var utilsModule = require("tns-core-modules/utils/utils");
 
@@ -30,10 +26,7 @@ const Participant = com.twilio.video.RemoteParticipant;
 const Room = com.twilio.video.Room;
 const VideoTrack = com.twilio.video.VideoTrack;
 
-
 export class VideoActivity {
-    videoCodec: any;
-    audioCodec: any;
 
     public previousAudioMode: any;
     public localVideoView: any;
@@ -50,6 +43,7 @@ export class VideoActivity {
     public audioManager: any;
     private _event: Observable;
     public participant: any;
+
 
     constructor() {
 
@@ -84,9 +78,12 @@ export class VideoActivity {
 
         }
 
+
         let connectOptionsBuilder = new ConnectOptions.Builder(this.accessToken).roomName(roomName);
 
         if (!this.localAudioTrack && options.audio) {
+
+
 
             app.android.foregroundActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
@@ -94,9 +91,11 @@ export class VideoActivity {
 
             this.audioManager.setSpeakerphoneOn(true);
 
-            this.configure_audio(true);            
+            this.configure_audio(true);
+
 
             this.localAudioTrack = com.twilio.video.LocalAudioTrack.create(utilsModule.ad.getApplicationContext(), true, "mic");
+
             /*
             * Add local audio track to connect options to share with participants.
             */
@@ -109,8 +108,6 @@ export class VideoActivity {
          */
 
         if (!this.localVideoTrack && options.video) {
-
-            this.startPreview();
 
             connectOptionsBuilder.videoTracks(java.util.Collections.singletonList(this.localVideoTrack));
 
@@ -274,7 +271,8 @@ export class VideoActivity {
 
             },
             onConnectFailure(room, error) {
-                // self.configure_audio(false);
+                if (self.audioManager)
+                    self.configure_audio(false);
                 self._event.notify({
                     eventName: 'didFailToConnectWithError',
                     object: fromObject({
@@ -286,7 +284,8 @@ export class VideoActivity {
             onDisconnected(room, error) {
                 self.room = '';
                 self.localParticipant = null;
-                // self.configure_audio(false)
+                if (self.audioManager)
+                    self.configure_audio(false)
                 if (self._event) {
                     self._event.notify({
                         eventName: 'onDisconnected',

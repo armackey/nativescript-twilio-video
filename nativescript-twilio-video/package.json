@@ -1,6 +1,6 @@
 {
     "name": "nativescript-twilio-video",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Your awesome NativeScript plugin.",
     "main": "twilio-video",
     "typings": "index.d.ts",
