@@ -1,7 +1,6 @@
 import { View } from 'ui/core/view';
 import * as utils from "tns-core-modules/utils/utils";
 import { Observable, fromObject } from 'tns-core-modules/data/observable';
-import * as application from "tns-core-modules/application";
 var app = require("application");
 var utilsModule = require("tns-core-modules/utils/utils");
 
@@ -69,8 +68,9 @@ export class VideoActivity {
 
     public connect_to_room(roomName: string, options: { video: boolean, audio: boolean }) {
 
-
         if (!this.accessToken) {
+
+            console.log('this.accessToken');
 
             this.onError('Please provide a valid token to connect to a room');
 
@@ -84,12 +84,14 @@ export class VideoActivity {
         if (!this.localAudioTrack && options.audio) {
 
 
-
             app.android.foregroundActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+
 
             this.audioManager = app.android.context.getSystemService(android.content.Context.AUDIO_SERVICE);
 
+
             this.audioManager.setSpeakerphoneOn(true);
+
 
             this.configure_audio(true);
 
@@ -99,7 +101,12 @@ export class VideoActivity {
             /*
             * Add local audio track to connect options to share with participants.
             */
+
+            // console.log('this.localAudioTrack');
+
             connectOptionsBuilder.audioTracks(java.util.Collections.singletonList(this.localAudioTrack));
+
+
 
         }
 
@@ -108,7 +115,6 @@ export class VideoActivity {
          */
 
         if (!this.localVideoTrack && options.video) {
-
             connectOptionsBuilder.videoTracks(java.util.Collections.singletonList(this.localVideoTrack));
 
         }
@@ -127,9 +133,7 @@ export class VideoActivity {
         // room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
         // setDisconnectAction();        
 
-
         this.room = com.twilio.video.Video.connect(utilsModule.ad.getApplicationContext(), connectOptionsBuilder.build(), this.roomListener());
-
     }
 
     startPreview(): any {
@@ -297,7 +301,6 @@ export class VideoActivity {
                 }
             },
             onParticipantConnected(room, participant) {
-                console.log('participantDidConnect');
                 self._event.notify({
                     eventName: 'participantDidConnect',
                     object: fromObject({
@@ -409,7 +412,6 @@ export class VideoActivity {
             },
             onVideoTrackSubscribed(remoteParticipant, remoteVideoTrackPublication, remoteVideoTrack) {
                 self.addRemoteParticipantVideo(remoteVideoTrack);
-                console.log("onVideoTrackSubscribed")
                 self._event.notify({
                     eventName: 'onVideoTrackSubscribed',
                     object: fromObject({
@@ -421,7 +423,6 @@ export class VideoActivity {
             },
             onVideoTrackUnsubscribed(remoteParticipant, remoteVideoTrackPublication, remoteVideoTrack) {
                 self.removeParticipantVideo(remoteVideoTrack);
-                console.log("onVideoTrackUnsubscribed")
                 self._event.notify({
                     eventName: 'onVideoTrackUnsubscribed',
                     object: fromObject({
@@ -513,21 +514,26 @@ export class VideoActivity {
     public requestAudioFocus() {
         if (android.os.Build.VERSION.SDK_INT >= 25) {
 
-            var playbackAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .build();
+            // var playbackAttributes = new AudioAttributes.Builder()
+            //     .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+            //     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+            //     .build();
 
-            var focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-                .setAudioAttributes(playbackAttributes)
-                .setAcceptsDelayedFocusGain(true)
-                .setOnAudioFocusChangeListener(new AudioManager.OnAudioFocusChangeListener({
-                    onAudioFocusChange(i) {
-                        console.log(i);
-                    }
-                }).build());
+            // this.onError('playbackAttributes');
 
-            this.audioManager.requestAudioFocus(focusRequest);
+            // var focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+            //     .setAudioAttributes(playbackAttributes)
+            //     .setAcceptsDelayedFocusGain(true)
+            //     .setOnAudioFocusChangeListener(
+            //         new AudioManager.OnAudioFocusChangeListener({
+            //             onAudioFocusChange(i) {
+            //                 console.log(i);
+            //             }
+            //     }).build());
+
+            // this.onError('focusRequest');
+
+            // this.audioManager.requestAudioFocus(focusRequest);
 
         } else {
             this.audioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);

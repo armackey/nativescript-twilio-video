@@ -1,6 +1,6 @@
 import { Observable, fromObject } from 'tns-core-modules/data/observable';
 
-declare var TVIVideoViewDelegate, TVICameraCapturerDelegate, TVIRemoteParticipantDelegate, TVIRoomDelegate;
+declare var TVIVideoViewDelegate, TVICameraCapturerDelegate, TVIRemoteParticipantDelegate, NSObject, TVIRoomDelegate;
 // TVIRemoteParticipantDelegate
 // TVIParticipantDelegate
 

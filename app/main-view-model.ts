@@ -41,13 +41,15 @@ export class VideoChat extends Observable {
         this.add_video_views();
 
         this.videoActivity.event.on('error', (reason) => {
+            console.log('big error');
+            console.log(reason.object['reason']);
             this.set("error", reason.object['reason']);
             console.log(JSON.stringify(reason.object['reason']));
         });
 
 
         this.videoActivity.event.on('didConnectToRoom', (r) => {
-            if (r.object['count'] < 1) return;
+            // if (r.object['count'] < 1) return;
             console.log("didConnectToRoom");
             this.toggle_local_video_size();
         });
@@ -311,6 +313,7 @@ export class VideoChat extends Observable {
         this.get_token()
             .then(result => {
                 var result = result.content.toJSON();
+                console.log(result);
                 this.videoActivity.set_access_token(result['token']);
                 this.videoActivity.connect_to_room(this.get('room'), {video: true, audio: true});
             }, e => {
@@ -322,7 +325,7 @@ export class VideoChat extends Observable {
     public get_token(): Promise<any> {
         let name = this.get('name')
         return http.request({
-            url: "url",
+            url: 'https://7720ba31.ngrok.io/getToken',
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({ uid: name })

@@ -31,10 +31,10 @@
     "homepage": "https://github.com/armackey/nativescript-twilio-video",
     "readmeFilename": "README.md",
     "devDependencies": {
-        "tns-core-modules": "~3.4.1",
-        "tns-platform-declarations": "^3.0.1",
-        "typescript": "~2.2.1",
         "prompt": "~1.0.0",
-        "rimraf": "~2.5.0"
+        "rimraf": "~2.5.0",
+        "tns-core-modules": "~3.4.1",
+        "tns-platform-declarations": "^3.4.1",
+        "typescript": "~2.2.1"
     }
 }

@@ -7,18 +7,18 @@
   "version": "1.0.1",
   "nativescript": {
     "id": "org.nativescript.videochat",
-    "tns-android": {
-      "version": "3.3.1"
-    },
     "tns-ios": {
-      "version": "3.3.0"
+      "version": "4.0.1"
+    },
+    "tns-android": {
+      "version": "4.0.1"
     }
   },
   "dependencies": {
     "nativescript-permissions": "^1.2.3",
-    "nativescript-theme-core": "~1.0.2",
     "nativescript-twilio-video": "file:nativescript-twilio-video",
-    "tns-core-modules": "~3.0.1"
+    "tns-core-modules": "^4.0.0",
+    "tns-platform-declarations": "^4.0.0"
   },
   "scripts": {
     "build": "tsc nativescript-twilio-video/twilio-video.android.ts --types tns-platform-declarations/android --lib es2016 -d true",
@@ -33,7 +33,6 @@
     "lazy": "1.0.11",
     "nativescript-dev-android-snapshot": "^0.*.*",
     "nativescript-dev-typescript": "~0.4.0",
-    "tns-platform-declarations": "^3.0.1",
     "typescript": "~2.3.2"
   }
 }
