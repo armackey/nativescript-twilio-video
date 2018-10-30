@@ -113,6 +113,9 @@ export class VideoActivity {
         /*
          * Add local video track to connect options to share with participants.
          */
+        if (!this.localVideoTrack && options.video) {
+            this.startPreview();
+        }
         if (this.localVideoTrack && options.video) {
             connectOptionsBuilder.videoTracks(java.util.Collections.singletonList(this.localVideoTrack));
         }
