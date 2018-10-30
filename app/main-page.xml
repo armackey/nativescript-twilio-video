@@ -5,7 +5,7 @@ You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
 <Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" unloaded="onViewUnloaded" 
-xmlns:TV="nativescript-twilio-video">
+xmlns:twilio="nativescript-twilio-video">
     <!--
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
@@ -25,14 +25,18 @@ xmlns:TV="nativescript-twilio-video">
     core theme, such as p-20, btn, h2, and text-center. You can view a full list of the
     class names available for styling your app at https://docs.nativescript.org/ui/theme.
     -->
-    <GridLayout id="container" width="100%" height="100%" columns="*,*" rows="auto,auto">
+    <GridLayout id="container" width="100%" height="100%" columns="*,*" rows="auto,auto, auto">
         
+        <twilio:LocalVideo height="50" width="50" col="0" row="0" colSpan="2" id="local-video" ></twilio:LocalVideo> 
+
+        <twilio:RemoteVideo height="50" width="50" col="0" row="1" colSpan="2"  id="remote-video" ></twilio:RemoteVideo>
+
         <Label 
             verticalAlignment="top" 
             text="{{ error }}" 
             colSpan="2" row="0" textWrap="true" visibility="{{ error === '' || !error ? 'collapse' : 'visible' }}"></Label>
 
-        <StackLayout id="actions" row="1" colSpan="2" width="100%" verticalAlignment="bottom">
+        <StackLayout id="actions" row="2" colSpan="2" width="100%" verticalAlignment="bottom">
 
             <TextField id="name" text="{{ name }}" hint="Your Name"></TextField>
 

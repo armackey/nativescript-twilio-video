@@ -15,8 +15,8 @@ const timer = require("timer");
 export class VideoChat extends Observable {
     
     public container: any;
-    public localVideo: LocalVideo;
-    public remoteVideo: RemoteVideo;
+    public localVideo: any;
+    public remoteVideo: any;
     public accessToken: string;
     public room: string;
     public name: string;
@@ -30,15 +30,15 @@ export class VideoChat extends Observable {
 
         this.videoActivity = new VideoActivity();
 
-        this.localVideo = new LocalVideo();
+        this.localVideo = this.page.getViewById('local-video');
 
-        this.remoteVideo = new RemoteVideo();
+        this.remoteVideo = this.page.getViewById('remote-video');
 
         this.videoActivity.localVideoView = this.localVideo.localVideoView;
 
         this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
 
-        this.add_video_views();
+        // this.add_video_views();
 
         this.videoActivity.event.on('error', (reason) => {
             console.log('big error');
@@ -51,7 +51,7 @@ export class VideoChat extends Observable {
         this.videoActivity.event.on('didConnectToRoom', (r) => {
             // if (r.object['count'] < 1) return;
             console.log("didConnectToRoom");
-            this.toggle_local_video_size();
+            // this.toggle_local_video_size();
         });
 
         this.videoActivity.event.on('didFailToConnectWithError', (r) => {
@@ -59,14 +59,14 @@ export class VideoChat extends Observable {
         });
 
         this.videoActivity.event.on('participantDidConnect', (r) => {
-            if (r.object['count'] < 1) return;
+            // if (r.object['count'] < 1) return;
             console.log("participantDidConnect");
-            this.toggle_local_video_size();
+            // this.toggle_local_video_size();
         });
 
         this.videoActivity.event.on('participantDidDisconnect', (r) => {
             console.log("participantDidDisconnect");
-            this.toggle_local_video_size();
+            // this.toggle_local_video_size();
         });
 
         this.videoActivity.event.on('participantUnpublishedAudioTrack', (r) => {
@@ -314,7 +314,11 @@ export class VideoChat extends Observable {
             .then(result => {
                 var result = result.content.toJSON();
                 console.log(result);
-                this.videoActivity.set_access_token(result['token']);
+                if (result['message']) {
+                    this.set('error', result['message']);
+                    return;
+                }
+                this.videoActivity.set_access_token(result['twilioToken']);
                 this.videoActivity.connect_to_room(this.get('room'), {video: true, audio: true});
             }, e => {
                 this.set('error', e);
@@ -325,7 +329,7 @@ export class VideoChat extends Observable {
     public get_token(): Promise<any> {
         let name = this.get('name')
         return http.request({
-            url: 'https://7720ba31.ngrok.io/getToken',
+            url: 'https://651ba425.ngrok.io/twilioToken',
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({ uid: name })

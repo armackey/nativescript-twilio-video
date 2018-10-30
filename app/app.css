@@ -29,6 +29,10 @@ TextField {
     background-color: beige;
 }
 
+Lable {
+    color: white;
+}
+
 Button {
     background-color: wheat;
     margin: 1 15;
