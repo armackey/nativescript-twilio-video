@@ -1,0 +1,61 @@
+<GridLayout columns="*" rows="auto,auto,auto">
+
+	<StackLayout col="0" row="0">
+
+		<Label text="Local Video" horizontalAlignment="center">
+		</Label>
+
+		<LocalVideo #localvideo id="localvideo" width="200" height="100">
+		</LocalVideo>
+
+	</StackLayout>
+
+	<StackLayout col="0" row="1">
+
+		<Label text="Remote Video" horizontalAlignment="center">
+		</Label>
+
+		<RemoteVideo #remotevideo id="remotevideo" width="200" height="100">
+		</RemoteVideo>
+
+	</StackLayout>
+
+	<StackLayout row="2">
+
+		<TextField
+			margin="20"
+			hint="name"
+			[(ngModel)]="name"
+			(ngModelChange)='model.name=$event'>
+		</TextField>
+
+		<TextField
+			margin="20"
+			hint="room name"
+			[(ngModel)]="room"
+			(ngModelChange)='model.room=$event'>
+		</TextField>
+
+		<Button
+			class="btn"
+			text="start local video"
+			(tap)="startLocalVideo();">
+		</Button>
+
+		<Button
+			class="btn"
+			text="connect"
+			(tap)="connect_to_room();">
+		</Button>
+
+		<Button
+			class="btn"
+			text="disconnect"
+			(tap)="disconnect();">
+		</Button>
+
+	</StackLayout>
+
+
+</GridLayout>
+

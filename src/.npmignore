@@ -1,0 +1,9 @@
+node_modules
+package.json
+*.map
+*.ts
+!*.d.ts
+!**/**.d.ts
+!src/**/**.d.ts
+tsconfig.json
+scripts/*

@@ -7,11 +7,11 @@
   "version": "1.0.1",
   "nativescript": {
     "id": "org.nativescript.videochat",
-    "tns-ios": {
-      "version": "4.0.1"
-    },
     "tns-android": {
-      "version": "4.0.1"
+      "version": "5.3.1"
+    },
+    "tns-ios": {
+      "version": "5.3.1"
     }
   },
   "dependencies": {
@@ -19,9 +19,9 @@
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "nativescript-permissions": "^1.2.3",
-    "nativescript-twilio-video": "file:nativescript-twilio-video",
-    "tns-core-modules": "^4.0.0",
-    "tns-platform-declarations": "^4.2.1",
+    "nativescript-twilio-video": "file:src",
+    "tns-core-modules": "^5.3.1",
+    "tns-platform-declarations": "^5.3.1",
     "twilio": "^3.23.2"
   },
   "scripts": {

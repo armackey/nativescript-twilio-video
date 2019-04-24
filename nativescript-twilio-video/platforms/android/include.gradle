@@ -1,7 +1,0 @@
-android {
-    
-}
-
-dependencies {
-    compile 'com.twilio:video-android:2.0.1'
-}
