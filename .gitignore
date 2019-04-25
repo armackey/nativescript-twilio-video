@@ -4,3 +4,5 @@ typingsz
 tns_modules
 package.json
 .env
+.vscode
+.nsbuildinfo
