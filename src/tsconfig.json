@@ -35,5 +35,5 @@
         "node_modules",
         "platforms"
     ],
-    "compileOnSave": false
+    "compileOnSave": true
 }

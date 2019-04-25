@@ -1,2 +1,5 @@
 node_modules
-tsconfig.json
+# *.ts
+# !*.d.ts
+# !**/**.d.ts
+# !src/**/**.d.ts
