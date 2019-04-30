@@ -2,7 +2,6 @@ node_modules
 platforms
 typingsz
 tns_modules
-package.json
 .env
 .vscode
 .nsbuildinfo
