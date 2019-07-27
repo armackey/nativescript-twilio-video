@@ -75,10 +75,14 @@ export class VideoActivity implements VideoActivityBase {
 	start_preview() {
         // TVICameraCapturer is not supported with the Simulator.
         // this.camera = TVICameraCapturer.alloc().initWithSourceDelegate(TVICameraCaptureSourceFrontCamera, this._cameraCapturerDelegate);
-		this.notify('start_preview');
         this.camera = TVICameraCapturer.alloc().initWithSource(TVICameraCaptureSourceFrontCamera);
 
         this.localVideoTrack = TVILocalVideoTrack.trackWithCapturer(this.camera);
+
+		if (!this.localVideoView) {
+			this.notify('localVideoView is not set');
+			return;
+		}
 
         if (!this.localVideoTrack) {
 
@@ -105,7 +109,11 @@ export class VideoActivity implements VideoActivityBase {
 
             this.localVideoTrack.enabled = !this.localVideoTrack.enable;
 
-        }
+        } else {
+			
+			this.start_preview();
+
+		}
 
     }
 
@@ -134,15 +142,12 @@ export class VideoActivity implements VideoActivityBase {
             this.localAudioTrack = TVILocalAudioTrack.track();
         }
 
-
         // Create a video track which captures from the camera.
         if (options.video) {
             this.start_preview();
         }
 
-
         var connectOptions = TVIConnectOptions.optionsWithTokenBlock(this.accessToken, (builder) => {
-
 
             // Use the local media that we prepared earlier.
             if (options.audio)
@@ -155,14 +160,13 @@ export class VideoActivity implements VideoActivityBase {
             // Room `name`, the Client will create one for you. You can get the name or sid from any connected Room.
             builder.roomName = room;
 
-
         });
 
 
 
         // Connect to the Room using the options we provided.
         this.room = TwilioVideo.connectWithOptionsDelegate(connectOptions, this._roomDelegate);
-
+		this.notify('completed');
         // [self logMessage:[NSString stringWithFormat:@"Attempting to connect to room %@", self.roomTextField.text]];
 
     }

@@ -5,7 +5,7 @@ import { LocalVideo, VideoActivity, RemoteVideo } from 'nativescript-twilio-vide
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { StackLayout } from 'tns-core-modules/ui/layouts/stack-layout/stack-layout';
 import { GridLayout, ItemSpec } from 'tns-core-modules/ui/layouts/grid-layout';
-
+// import { fetch } from "fetch";
 const http = require("tns-core-modules/http");
 const permissions = require('nativescript-permissions');
 const timer = require("tns-core-modules/timer");
@@ -38,15 +38,11 @@ export class VideoChat extends Observable {
         this.videoActivity.localVideoView = this.localVideo.localVideoView;
 
         this.videoActivity.remoteVideoView = this.remoteVideo.remoteVideoView;
-		
-		console.log('is on android');
 
 		if (app.android) {
-			console.log('is on android');
 			this.set('name', 'android')
 		} else {
 			this.set('name', 'ios')
-			// this.name = 'ios'
 		}
 
 		this.room = 'testing-room';
@@ -54,7 +50,7 @@ export class VideoChat extends Observable {
         // this.add_video_views();
 
         this.videoActivity.event.on('error', (reason) => {
-            console.log('big error');
+            
             console.log(reason.object['reason']);
             // this.set("error", reason.object['reason']);
 			this.nameEventsArray.push({ title: reason.object['reason'].toString()})
@@ -316,8 +312,8 @@ export class VideoChat extends Observable {
 
 
     public toggle_local_video() {
-
-        this.videoActivity.toggle_local_video();
+		
+		this.videoActivity.start_preview();
 
     }
 
@@ -327,16 +323,13 @@ export class VideoChat extends Observable {
         else this.set('error', "");
         this.get_token()
             .then(result => {
-                var result = result.content.toJSON();
-                console.log(result);
+				result = result.content.toJSON();
                 if (result['message']) {
                     this.set('error', result['message']);
                     return;
                 }
-				console.log(this.videoActivity.room);
                 this.videoActivity.set_access_token(result['twilioToken']);
                 this.videoActivity.connect_to_room(this.get('room'), {video: true, audio: true});
-				console.log(this.videoActivity.room);
             }, e => {
                 this.set('error', e);
             });
@@ -346,7 +339,7 @@ export class VideoChat extends Observable {
     public get_token(): Promise<any> {
         let name = this.get('name')
         return http.request({
-			url: 'https://9e828d6e.ngrok.io/twilioToken',
+			url: 'https://9aafb7ac.ngrok.io/twilioToken',
             method: "POST",
             headers: { "Content-Type": "application/json" },
             content: JSON.stringify({ uid: name })

@@ -5,11 +5,11 @@ const bodyParser = require('body-parser');
 const { getTwilioToken } = require('./twilio');
 const PORT = process.env.PORT || 9000;
 const app = express();
-
+console.log(process.env.TWILIO_API_KEY);
 app.use(bodyParser.json());
 
 app.post('/twilioToken', (req, res) => {
-    console.log('twilioToken');
+	console.log('twilioTOken');
     getTwilioToken(req, res);
 });
 

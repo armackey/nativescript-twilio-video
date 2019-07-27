@@ -3,6 +3,7 @@ var VideoGrant = AccessToken.VideoGrant;
 
 exports.getTwilioToken = (request, response) => {
     let { uid } = request.body;
+	console.log('uid:', uid);
     return new Promise((resolve, reject) => {
         if (!uid) {
             response.send({ message: 'need uid' });
@@ -22,7 +23,7 @@ exports.getTwilioToken = (request, response) => {
         var grant = new VideoGrant();
 
         token.addGrant(grant);
-
+		console.log('should send something back');
         // Serialize the token to a JWT string and include it in a JSON response.
         response.send({ twilioToken: token.toJwt() });   
     });

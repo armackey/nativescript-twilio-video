@@ -35,9 +35,6 @@ In Info.plist
 ## 5
 Once you have your server configured, change the url to match yours. You may also need to change the key on the object you're sending. It's currently { uid: name }.
 
-## 6
-<img src="./cool1.png" width="200"/>
-
 # Supported Devices
 https://www.twilio.com/docs/video/getting-started-4x#supported-devices
 

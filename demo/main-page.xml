@@ -4,8 +4,11 @@ of which NativeScript renders with a platform-specific iOS or Android native con
 You can find a full list of user interface components you can use in your app at
 https://docs.nativescript.org/ui/components.
 -->
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" unloaded="onViewUnloaded" 
-xmlns:twilio="nativescript-twilio-video">
+<Page
+	xmlns="http://schemas.nativescript.org/tns.xsd"
+	loaded="pageLoaded" 
+	navigatingTo="onNavigatingTo" 
+	xmlns:twilio="nativescript-twilio-video">
     <!--
     The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
     http://docs.nativescript.org/ui/action-bar
